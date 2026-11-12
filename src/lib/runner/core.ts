@@ -10,6 +10,8 @@ export interface TestCase {
 	expected: unknown;
 	/** Hidden tests only report pass/fail, so learners can't hard-code answers. */
 	hidden?: boolean;
+	/** Short label shown next to the test ("empty island", "two trees with 5 branches"). */
+	name?: { 'pt-BR': string; en: string };
 	/**
 	 * Max number of element reads allowed on the first argument (an array).
 	 * Lets an exercise require an O(log n) solution instead of a linear scan.
@@ -23,7 +25,14 @@ export interface TestResult {
 	error?: string;
 	/** Set when `maxReads` was exceeded. */
 	reads?: number;
+	/**
+	 * Indexes of the first argument (an array) in the order the code read them, capped at
+	 * TRACE_LIMIT. The exercise stage replays it: the character goes where the code looked.
+	 */
+	trace?: number[];
 }
+
+export const TRACE_LIMIT = 400;
 
 export interface RunRequest {
 	code: string;
@@ -82,30 +91,37 @@ export function execute({ code, lang, entry, tests }: RunRequest): RunResponse {
 	}
 	if (typeof fn !== 'function') return { kind: 'missing-entry', entry, logs };
 
+	let lastTrace: number[] = [];
 	const results = tests.map(({ args, expected, maxReads }): TestResult => {
+		lastTrace = [];
 		try {
 			const input = structuredClone(args);
-			const counter = { reads: 0 };
-			if (maxReads !== undefined && Array.isArray(input[0])) input[0] = countReads(input[0], counter);
+			const counter = { reads: 0, trace: lastTrace };
+			const traced = Array.isArray(input[0]);
+			if (traced) input[0] = countReads(input[0] as unknown[], counter);
 			const received = fn(...input);
 			const result: TestResult = { pass: deepEqual(received, expected), received: format(received) };
+			if (traced) result.trace = counter.trace;
 			if (maxReads !== undefined && counter.reads > maxReads) {
 				result.pass = false;
 				result.reads = counter.reads;
 			}
 			return result;
 		} catch (error) {
-			return { pass: false, error: errorMessage(error) };
+			return { pass: false, error: errorMessage(error), trace: lastTrace.length ? lastTrace : undefined };
 		}
 	});
 
 	return { kind: 'ok', results, logs };
 }
 
-function countReads<T>(array: T[], counter: { reads: number }): T[] {
+function countReads<T>(array: T[], counter: { reads: number; trace: number[] }): T[] {
 	return new Proxy(array, {
 		get(target, key, receiver) {
-			if (typeof key === 'string' && /^\d+$/.test(key)) counter.reads++;
+			if (typeof key === 'string' && /^\d+$/.test(key)) {
+				counter.reads++;
+				if (counter.trace.length < TRACE_LIMIT) counter.trace.push(Number(key));
+			}
 			return Reflect.get(target, key, receiver);
 		},
 	});

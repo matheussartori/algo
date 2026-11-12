@@ -1,198 +1,110 @@
 import { binarySearchBudget as budget } from '../lib/runner/core';
 import type { ExerciseDef } from './types';
 
-const bigShelf = Array.from({ length: 1000 }, (_, i) => 100 + i * 7);
+const bigPond = Array.from({ length: 1000 }, (_, i) => 3 + i * 4);
 
-const mustBeBinary = {
-	'pt-BR': 'Os testes ocultos usam arrays grandes e contam quantos elementos você lê. Uma busca linear não passa.',
-	en: 'Hidden tests use large arrays and count how many elements you read. A linear scan will not pass.',
-};
-
-export const libraryBook: ExerciseDef = {
-	id: 'binary-search/library-book',
-	entry: 'findBookIndex',
-	starter: `function findBookIndex(libraryBooks: number[], bookId: number): number {
+export const frogMail: ExerciseDef = {
+	id: 'binary-search/frog-mail',
+	lesson: 'search/binary-search',
+	order: 1,
+	scene: 'pond',
+	title: { 'pt-BR': 'Correio do Sapo Ribas', en: 'Ribbit Post' },
+	story: {
+		'pt-BR':
+			'O Sapo Ribas entrega cartas no lago. As vitórias-régias boiam em fila, numeradas em ordem crescente, e são centenas. Sapo não anda, sapo pula, e cada pulo cansa. Se for de folha em folha, a carta chega no inverno.',
+		en: 'Ribbit delivers mail on the pond. The lily pads float in a row, numbered in increasing order, and there are hundreds of them. Frogs don\'t walk, they jump, and every jump is tiring. Going pad by pad, the letter arrives next winter.',
+	},
+	task: {
+		'pt-BR':
+			'Escreva `findLilyPad(pads, address)`. `pads` está em ordem crescente e não tem números repetidos. Retorne o índice da folha com o número `address`, ou `-1` se ela não existir. O Ribas aguenta poucos pulos: com 1.000 folhas, umas 20 olhadas no máximo.',
+		en: 'Write `findLilyPad(pads, address)`. `pads` is in increasing order with no repeats. Return the index of the pad numbered `address`, or `-1` if there is none. Ribbit can only take a few jumps: with 1,000 pads, about 20 looks at most.',
+	},
+	examples: [
+		{ call: 'findLilyPad([3, 8, 15, 23, 42, 57, 61, 90], 42)', result: '4' },
+		{
+			call: 'findLilyPad([3, 8, 15], 10)',
+			result: '-1',
+			note: { 'pt-BR': 'Não existe folha 10.', en: 'There is no pad 10.' },
+		},
+	],
+	recap: {
+		'pt-BR':
+			'Busca binária: num array ordenado, olhe o meio. Se for o alvo, achou. Se o alvo for menor, ele só pode estar à esquerda; se for maior, à direita. Cada olhada descarta metade, então 1.000 elementos pedem uns 10 passos: O(log n).',
+		en: 'Binary search: in a sorted array, look at the middle. If it is the target, done. If the target is smaller, it can only be on the left; if larger, on the right. Each look throws away half, so 1,000 elements take about 10 steps: O(log n).',
+	},
+	goal: { 'pt-BR': 'Carta para a folha 42', en: 'Letter for pad 42' },
+	entry: 'findLilyPad',
+	starter: `function findLilyPad(pads: number[], address: number): number {
   return -1
 }`,
-	solution: `function findBookIndex(libraryBooks: number[], bookId: number): number {
+	solution: `function findLilyPad(pads: number[], address: number): number {
   let low = 0
-  let high = libraryBooks.length - 1
+  let high = pads.length - 1
   while (low <= high) {
     const mid = Math.floor((low + high) / 2)
-    if (libraryBooks[mid] === bookId) return mid
-    if (libraryBooks[mid] < bookId) low = mid + 1
+    if (pads[mid] === address) return mid
+    if (pads[mid] < address) low = mid + 1
     else high = mid - 1
   }
   return -1
 }`,
 	tests: [
-		{ args: [[102, 205, 308, 410, 523, 636, 749, 852, 965, 1078], 410], expected: 3 },
-		{ args: [[102, 205, 308, 410, 523, 636, 749, 852, 965, 1078], 1078], expected: 9 },
-		{ args: [[102, 205, 308, 410, 523, 636, 749, 852, 965, 1078], 500], expected: -1 },
-		{ args: [[], 1], expected: -1, hidden: true },
-		{ args: [bigShelf, 100 + 990 * 7], expected: 990, hidden: true, maxReads: budget(1000) },
-		{ args: [bigShelf, 101], expected: -1, hidden: true, maxReads: budget(1000) },
+		{
+			args: [[3, 8, 15, 23, 42, 57, 61, 90], 42],
+			expected: 4,
+			name: { 'pt-BR': 'a folha 42 existe', en: 'pad 42 exists' },
+		},
+		{
+			args: [[3, 8, 15, 23, 42], 3],
+			expected: 0,
+			name: { 'pt-BR': 'é a primeira folha', en: "it's the first pad" },
+		},
+		{
+			args: [[3, 8, 15], 10],
+			expected: -1,
+			name: { 'pt-BR': 'endereço que não existe', en: 'an address that does not exist' },
+		},
+		{
+			args: [[], 42],
+			expected: -1,
+			hidden: true,
+			name: { 'pt-BR': 'lago vazio', en: 'an empty pond' },
+		},
+		{
+			args: [[42], 42],
+			expected: 0,
+			hidden: true,
+			name: { 'pt-BR': 'uma folha só', en: 'a single pad' },
+		},
+		{
+			args: [bigPond, 3 + 777 * 4],
+			expected: 777,
+			hidden: true,
+			maxReads: budget(1000),
+			name: { 'pt-BR': '1.000 folhas, sem cansar o sapo', en: '1,000 pads, without tiring the frog' },
+		},
+		{
+			args: [bigPond, 4000],
+			expected: -1,
+			hidden: true,
+			maxReads: budget(1000),
+			name: { 'pt-BR': '1.000 folhas, endereço errado', en: '1,000 pads, wrong address' },
+		},
 	],
 	hints: [
-		mustBeBinary,
-		{ 'pt-BR': 'Mantenha duas variáveis, `low` e `high`, marcando onde o livro ainda pode estar.', en: 'Keep two variables, `low` and `high`, marking where the book can still be.' },
-		{ 'pt-BR': 'Olhe o meio. Se for menor que o alvo, tudo à esquerda dele também é: `low = mid + 1`.', en: 'Look at the middle. If it is smaller than the target, everything to its left is too: `low = mid + 1`.' },
+		{
+			'pt-BR': 'Pula pro meio. O número de lá é maior ou menor que o endereço? Qual metade do lago dá pra esquecer?',
+			en: 'Jump to the middle. Is that number bigger or smaller than the address? Which half of the pond can you forget?',
+		},
+		{
+			'pt-BR': 'Guarde as pontas do pedaço que ainda pode ter a folha: `low = 0`, `high = pads.length - 1`. O meio é `Math.floor((low + high) / 2)`.',
+			en: 'Keep the ends of the stretch that can still hold the pad: `low = 0`, `high = pads.length - 1`. The middle is `Math.floor((low + high) / 2)`.',
+		},
+		{
+			'pt-BR': 'Repita enquanto `low <= high`. Meio menor que o endereço: `low = mid + 1`. Maior: `high = mid - 1`. Se o laço acabar, retorne `-1`.',
+			en: 'Repeat while `low <= high`. Middle smaller than the address: `low = mid + 1`. Bigger: `high = mid - 1`. If the loop ends, return `-1`.',
+		},
 	],
 };
 
-const pastries = [
-	'Croissant2022', 'CroissantAlmond', 'CroissantApricot', 'CroissantBanana', 'CroissantButtery',
-	'CroissantCaramel', 'CroissantFlaky', 'CroissantGourmet', 'CroissantHazelnut', 'CroissantOrange',
-	'DanishAlmond', 'DanishApricot', 'DanishButtery', 'DanishChocolate', 'DanishCinnamon',
-	'DanishCranberry', 'DanishGourmet', 'DanishHazelnut', 'DanishLemon', 'DanishOrange',
-	'EclairButterscotch', 'EclairCaramel', 'EclairChocolate', 'EclairCoconut', 'EclairDelight',
-	'EclairMango', 'EclairPineapple', 'EclairRaspberry', 'EclairSpecial', 'EclairVanilla',
-	'MacaronBlueberry', 'MacaronCinnamon', 'MacaronCoffee', 'MacaronHazelnut', 'MacaronLavender',
-	'MacaronOrange', 'MacaronPistachio', 'MacaronRose', 'MacaronSpecial', 'MacaronVanilla',
-	'SconeBlueberry', 'SconeCherry', 'SconeChocolate', 'SconeCinnamon', 'SconeCranberry',
-	'SconeHazelnut', 'SconeLemon', 'SconePeach', 'SconeStrawberry', 'SconeVanilla',
-];
-
-export const bakeryPastry: ExerciseDef = {
-	id: 'binary-search/bakery-pastry',
-	entry: 'findPastryIndex',
-	starter: `function findPastryIndex(bakeryPastries: string[], pastryCode: string): number {
-  return -1
-}`,
-	solution: `function findPastryIndex(bakeryPastries: string[], pastryCode: string): number {
-  let low = 0
-  let high = bakeryPastries.length - 1
-  while (low <= high) {
-    const mid = Math.floor((low + high) / 2)
-    const current = bakeryPastries[mid]
-    if (current === pastryCode) return mid
-    if (current < pastryCode) low = mid + 1
-    else high = mid - 1
-  }
-  return -1
-}`,
-	tests: [
-		{ args: [pastries, 'SconeLemon'], expected: 46, maxReads: budget(pastries.length) },
-		{ args: [pastries, 'CroissantAlmond'], expected: 1, maxReads: budget(pastries.length) },
-		{ args: [pastries, 'BrownieDeluxe'], expected: -1, maxReads: budget(pastries.length) },
-		{ args: [pastries, 'MacaronRose'], expected: 37, hidden: true, maxReads: budget(pastries.length) },
-		{ args: [pastries, 'Scone'], expected: -1, hidden: true, maxReads: budget(pastries.length) },
-	],
-	hints: [
-		mustBeBinary,
-		{ 'pt-BR': 'Strings também podem ser comparadas com `<` e `>`: a ordem é a de dicionário.', en: 'Strings can be compared with `<` and `>` too: the order is dictionary order.' },
-		{ 'pt-BR': 'Atenção: maiúsculas vêm antes de minúsculas e dígitos antes de letras (`"Croissant2022" < "CroissantAlmond"`).', en: 'Careful: uppercase comes before lowercase and digits before letters (`"Croissant2022" < "CroissantAlmond"`).' },
-	],
-};
-
-const signals = Array.from({ length: 1000 }, (_, i) => i * 10);
-
-export const spacecraftNavigation: ExerciseDef = {
-	id: 'binary-search/spacecraft-navigation',
-	entry: 'findClosestFrequency',
-	starter: `function findClosestFrequency(beaconFrequencies: number[], targetFrequency: number): number {
-  return 0
-}`,
-	solution: `function findClosestFrequency(beaconFrequencies: number[], targetFrequency: number): number {
-  let low = 0
-  let high = beaconFrequencies.length - 1
-  // Find the first frequency >= target
-  while (low < high) {
-    const mid = Math.floor((low + high) / 2)
-    if (beaconFrequencies[mid] < targetFrequency) low = mid + 1
-    else high = mid
-  }
-  if (low > 0) {
-    const before = beaconFrequencies[low - 1]
-    const after = beaconFrequencies[low]
-    if (targetFrequency - before <= Math.abs(after - targetFrequency)) return low - 1
-  }
-  return low
-}`,
-	tests: [
-		{ args: [[100, 200, 300, 400, 500], 350], expected: 2 },
-		{ args: [[100, 200, 300, 400, 500], 420], expected: 3 },
-		{ args: [[100, 200, 300, 400, 500], 50], expected: 0 },
-		{ args: [[100, 200, 300, 400, 500], 900], expected: 4 },
-		{ args: [[100, 200, 300, 400, 500], 300], expected: 2, hidden: true },
-		{ args: [[42], 7], expected: 0, hidden: true },
-		{ args: [signals, 4567], expected: 457, hidden: true, maxReads: budget(1000) + 4 },
-		{ args: [signals, 4565], expected: 456, hidden: true, maxReads: budget(1000) + 4 },
-	],
-	hints: [
-		mustBeBinary,
-		{ 'pt-BR': 'Primeiro encontre a posição onde o alvo seria inserido para manter o array ordenado.', en: 'First find the position where the target would be inserted to keep the array sorted.' },
-		{ 'pt-BR': 'A resposta é essa posição ou a anterior. Compare as duas distâncias (empate: fica a menor).', en: 'The answer is that position or the one before it. Compare both distances (tie: keep the smaller one).' },
-	],
-};
-
-const longLog = Array.from({ length: 1000 }, (_, i) => (i < 731 ? i : i + 1));
-
-export const missingTimestamp: ExerciseDef = {
-	id: 'binary-search/missing-timestamp',
-	entry: 'findMissingTimestamp',
-	starter: `function findMissingTimestamp(transactions: number[]): number {
-  return 0
-}`,
-	solution: `function findMissingTimestamp(transactions: number[]): number {
-  // Before the gap, transactions[i] === i. After it, transactions[i] > i.
-  let low = 0
-  let high = transactions.length
-  while (low < high) {
-    const mid = Math.floor((low + high) / 2)
-    if (transactions[mid] === mid) low = mid + 1
-    else high = mid
-  }
-  return low
-}`,
-	tests: [
-		{ args: [[0, 1, 2, 3, 5, 6, 7, 8]], expected: 4 },
-		{ args: [[1, 2, 3]], expected: 0 },
-		{ args: [[0, 1, 2]], expected: 3 },
-		{ args: [[]], expected: 0, hidden: true },
-		{ args: [[0, 2]], expected: 1, hidden: true },
-		{ args: [longLog], expected: 731, hidden: true, maxReads: budget(1000) },
-	],
-	hints: [
-		mustBeBinary,
-		{ 'pt-BR': 'Sem buracos, `transactions[i] === i` para todo `i`. O que muda depois do primeiro buraco?', en: 'With no gaps, `transactions[i] === i` for every `i`. What changes after the first gap?' },
-		{ 'pt-BR': 'Procure o primeiro índice onde `transactions[i] !== i`. Se não existir, a resposta é o tamanho do array.', en: 'Look for the first index where `transactions[i] !== i`. If there is none, the answer is the array length.' },
-	],
-};
-
-const bases = ['A', 'C', 'G', 'T'];
-const allSequences = bases.flatMap((a) => bases.flatMap((b) => bases.flatMap((c) => bases.flatMap((d) => bases.map((e) => a + b + c + d + e)))));
-const catalog = allSequences.filter((_, i) => i % 3 !== 0);
-
-export const geneticMutation: ExerciseDef = {
-	id: 'binary-search/genetic-mutation',
-	entry: 'searchForMutation',
-	starter: `function searchForMutation(dnaSequences: string[], targetSequence: string): boolean {
-  return false
-}`,
-	solution: `function searchForMutation(dnaSequences: string[], targetSequence: string): boolean {
-  let low = 0
-  let high = dnaSequences.length - 1
-  while (low <= high) {
-    const mid = Math.floor((low + high) / 2)
-    const current = dnaSequences[mid]
-    if (current === targetSequence) return true
-    if (current < targetSequence) low = mid + 1
-    else high = mid - 1
-  }
-  return false
-}`,
-	tests: [
-		{ args: [['ACGT', 'ATCG', 'CGTA', 'GTAC', 'TACG'], 'ATCG'], expected: true },
-		{ args: [['ACGT', 'ATCG', 'CGTA', 'GTAC', 'TACG'], 'GGGG'], expected: false },
-		{ args: [[], 'ACGT'], expected: false, hidden: true },
-		{ args: [catalog, catalog[600]], expected: true, hidden: true, maxReads: budget(catalog.length) },
-		{ args: [catalog, allSequences[600]], expected: false, hidden: true, maxReads: budget(catalog.length) },
-	],
-	hints: [
-		mustBeBinary,
-		{ 'pt-BR': 'É uma busca binária normal; só muda o que você retorna.', en: 'It is a regular binary search; only the return value changes.' },
-	],
-};
-
-export const binarySearchExercises = [libraryBook, bakeryPastry, spacecraftNavigation, missingTimestamp, geneticMutation];
+export const binarySearchExercises = [frogMail];

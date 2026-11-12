@@ -1,177 +1,96 @@
 import type { ExerciseDef } from './types';
 
-const many = Array.from({ length: 200 }, (_, i) => i * 3);
+const bigIsland = Array.from({ length: 200 }, (_, i) => (i * 7) % 211);
 
 export const pirateTreasure: ExerciseDef = {
 	id: 'linear-search/pirate-treasure',
-	entry: 'findTreeIndexByBranches',
-	starter: `function findTreeIndexByBranches(branchesOnTrees: number[], targetBranchCount: number): number {
-  return -1
-}`,
-	solution: `function findTreeIndexByBranches(branchesOnTrees: number[], targetBranchCount: number): number {
-  for (let i = 0; i < branchesOnTrees.length; i++) {
-    if (branchesOnTrees[i] === targetBranchCount) return i
-  }
-  return -1
-}`,
-	tests: [
-		{ args: [[2, 4, 6, 8, 10], 6], expected: 2 },
-		{ args: [[2, 4, 6, 8, 10], 2], expected: 0 },
-		{ args: [[2, 4, 6, 8, 10], 7], expected: -1 },
-		{ args: [[], 3], expected: -1, hidden: true },
-		{ args: [[9, 1, 5], 5], expected: 2, hidden: true },
-		{ args: [many, 597], expected: 199, hidden: true },
+	lesson: 'search/linear-search',
+	order: 1,
+	scene: 'island',
+	title: { 'pt-BR': 'O mapa do Barba-Rala', en: "Captain Stubble's map" },
+	story: {
+		'pt-BR':
+			'O Capitão Barba-Rala achou o mapa do avô. Nada de X, nada de passos: só o desenho de uma árvore com **5 galhos**. A ilha tem árvores pra todo lado, cada uma com um número diferente de galhos, e o capitão não confia na própria vista. Ele vai de árvore em árvore, contando.',
+		en: "Captain Stubble found his grandfather's map. No X, no paces: just a drawing of a tree with **5 branches**. The island is full of trees, each with a different number of branches, and the captain doesn't trust his eyes. He'll go tree by tree, counting.",
+	},
+	task: {
+		'pt-BR':
+			'Escreva `findTreasureTree(trees, branches)`. `trees[i]` é o número de galhos da árvore `i`, da praia pra dentro da ilha. Retorne o índice da primeira árvore com `branches` galhos. Se nenhuma bater, retorne `-1` e o capitão volta pro navio.',
+		en: 'Write `findTreasureTree(trees, branches)`. `trees[i]` is how many branches tree `i` has, from the beach inland. Return the index of the first tree with `branches` branches. If none match, return `-1` and the captain goes back to the ship.',
+	},
+	examples: [
+		{ call: 'findTreasureTree([3, 7, 2, 9, 5, 4], 5)', result: '4' },
+		{
+			call: 'findTreasureTree([3, 7, 2], 5)',
+			result: '-1',
+			note: { 'pt-BR': 'Nenhuma árvore tem 5 galhos.', en: 'No tree has 5 branches.' },
+		},
 	],
-	hints: [
-		{ 'pt-BR': 'Você precisa olhar cada árvore, uma de cada vez.', en: 'You need to look at each tree, one at a time.' },
-		{ 'pt-BR': 'Use um `for` com um índice `i` e compare `branchesOnTrees[i]` com o alvo.', en: 'Use a `for` loop with an index `i` and compare `branchesOnTrees[i]` with the target.' },
-		{ 'pt-BR': 'Se achar, retorne `i` na hora. Se o loop acabar sem achar, retorne `-1`.', en: 'If you find it, return `i` right away. If the loop ends without a match, return `-1`.' },
-	],
-};
-
-export const lostOrange: ExerciseDef = {
-	id: 'linear-search/lost-orange',
-	entry: 'findOrangeIndexInBasket',
-	starter: `function findOrangeIndexInBasket(fruitBasket: string[], targetFruit: string): number {
+	recap: {
+		'pt-BR':
+			'Busca linear: olha um elemento de cada vez, do primeiro ao último, e para no primeiro que bate com o alvo. Se o laço acabar sem achar, o alvo não está lá. No pior caso são `n` comparações, ou seja, O(n).',
+		en: "Linear search: look at one element at a time, first to last, and stop at the first match. If the loop ends without one, the target isn't there. Worst case is `n` comparisons, so O(n).",
+	},
+	goal: { 'pt-BR': 'Mapa: árvore de 5 galhos', en: 'Map: tree with 5 branches' },
+	entry: 'findTreasureTree',
+	starter: `function findTreasureTree(trees: number[], branches: number): number {
   return -1
 }`,
-	solution: `function findOrangeIndexInBasket(fruitBasket: string[], targetFruit: string): number {
-  for (let i = 0; i < fruitBasket.length; i++) {
-    if (fruitBasket[i] === targetFruit) return i
-  }
-  return -1
-}`,
-	tests: [
-		{ args: [['apple', 'banana', 'grape', 'orange'], 'orange'], expected: 3 },
-		{ args: [['apple', 'banana', 'grape'], 'orange'], expected: -1 },
-		{ args: [['orange', 'orange'], 'orange'], expected: 0, hidden: true },
-		{ args: [['Orange', 'orange'], 'orange'], expected: 1, hidden: true },
-		{ args: [[], 'orange'], expected: -1, hidden: true },
-	],
-	hints: [
-		{ 'pt-BR': 'É a mesma ideia do exercício anterior, só que com strings.', en: 'Same idea as the previous exercise, but with strings.' },
-		{ 'pt-BR': 'Se houver mais de uma laranja, qual índice o teste espera? O primeiro.', en: 'If there is more than one orange, which index do the tests expect? The first one.' },
-	],
-};
-
-export const bobsIdea: ExerciseDef = {
-	id: 'linear-search/bobs-idea',
-	entry: 'findProposalIndexByName',
-	starter: `type ProjectProposal = {
-  name: string
-  idea: string
-}
-
-function findProposalIndexByName(projectProposals: ProjectProposal[], targetName: string): number {
-  return -1
-}`,
-	solution: `type ProjectProposal = {
-  name: string
-  idea: string
-}
-
-function findProposalIndexByName(projectProposals: ProjectProposal[], targetName: string): number {
-  for (let i = 0; i < projectProposals.length; i++) {
-    if (projectProposals[i].name === targetName) return i
+	solution: `function findTreasureTree(trees: number[], branches: number): number {
+  for (let i = 0; i < trees.length; i++) {
+    if (trees[i] === branches) return i
   }
   return -1
 }`,
 	tests: [
 		{
-			args: [[{ name: 'Alice', idea: 'Idea A' }, { name: 'Bob', idea: 'Idea B' }, { name: 'Charlie', idea: 'Idea C' }], 'Bob'],
-			expected: 1,
+			args: [[3, 7, 2, 9, 5, 4, 8, 6], 5],
+			expected: 4,
+			name: { 'pt-BR': 'o tesouro está no meio da ilha', en: 'the treasure is mid-island' },
 		},
-		{ args: [[{ name: 'Alice', idea: 'Idea A' }], 'Bob'], expected: -1 },
-		{ args: [[{ name: 'Bob', idea: 'Bob' }, { name: 'Bob', idea: 'Again' }], 'Bob'], expected: 0, hidden: true },
-		{ args: [[{ name: 'Alice', idea: 'Bob' }], 'Bob'], expected: -1, hidden: true },
-	],
-	hints: [
-		{ 'pt-BR': 'Agora cada elemento é um objeto. O que você deve comparar com `targetName`?', en: 'Each element is now an object. What should you compare with `targetName`?' },
-		{ 'pt-BR': 'Compare `projectProposals[i].name`, não o objeto inteiro.', en: 'Compare `projectProposals[i].name`, not the whole object.' },
-	],
-};
-
-export const hiddenChamber: ExerciseDef = {
-	id: 'linear-search/hidden-chamber',
-	entry: 'findChamberIndexBySymbol',
-	starter: `function findChamberIndexBySymbol(caveLayout: number[][], targetSymbol: number): number {
-  return -1
-}`,
-	solution: `function findChamberIndexBySymbol(caveLayout: number[][], targetSymbol: number): number {
-  for (let row = 0; row < caveLayout.length; row++) {
-    for (let col = 0; col < caveLayout[row].length; col++) {
-      if (caveLayout[row][col] === targetSymbol) return row
-    }
-  }
-  return -1
-}`,
-	tests: [
-		{ args: [[[1, 2, 3], [4, 5, 6], [7, 8, 9]], 5], expected: 1 },
-		{ args: [[[1, 2, 3], [4, 5, 6], [7, 8, 9]], 9], expected: 2 },
-		{ args: [[[1, 2, 3], [4, 5, 6], [7, 8, 9]], 10], expected: -1 },
-		{ args: [[[], [3], []], 3], expected: 1, hidden: true },
-		{ args: [[[1], [2, 2, 2, 7]], 7], expected: 1, hidden: true },
-		{ args: [[], 1], expected: -1, hidden: true },
-	],
-	hints: [
-		{ 'pt-BR': 'Cada câmara é uma linha da matriz. Você precisa olhar dentro de cada linha.', en: 'Each chamber is a row of the matrix. You need to look inside every row.' },
-		{ 'pt-BR': 'Use dois loops: um para as linhas e outro para os símbolos de cada linha.', en: 'Use two loops: one for the rows and one for the symbols in each row.' },
-		{ 'pt-BR': 'Quando achar, retorne o índice da linha, não da coluna.', en: 'When you find it, return the row index, not the column.' },
-	],
-};
-
-export const suspectsSafe: ExerciseDef = {
-	id: 'linear-search/suspects-safe',
-	entry: 'findSuspectIndexBySafeContents',
-	starter: `type Suspect = {
-  id: number
-  safeContents: number[]
-}
-
-function findSuspectIndexBySafeContents(suspectsData: Suspect[], targetContents: number[]): number {
-  return -1
-}`,
-	solution: `type Suspect = {
-  id: number
-  safeContents: number[]
-}
-
-function sameContents(a: number[], b: number[]): boolean {
-  if (a.length !== b.length) return false
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) return false
-  }
-  return true
-}
-
-function findSuspectIndexBySafeContents(suspectsData: Suspect[], targetContents: number[]): number {
-  for (let i = 0; i < suspectsData.length; i++) {
-    if (sameContents(suspectsData[i].safeContents, targetContents)) return i
-  }
-  return -1
-}`,
-	tests: [
 		{
-			args: [
-				[
-					{ id: 1, safeContents: [10, 20, 30] },
-					{ id: 2, safeContents: [40, 50, 60] },
-					{ id: 3, safeContents: [70, 80, 90] },
-				],
-				[40, 50, 60],
-			],
-			expected: 1,
+			args: [[5, 1, 6], 5],
+			expected: 0,
+			name: { 'pt-BR': 'é a primeira árvore', en: "it's the first tree" },
 		},
-		{ args: [[{ id: 1, safeContents: [10, 20, 30] }], [40, 50, 60]], expected: -1 },
-		{ args: [[{ id: 1, safeContents: [60, 50, 40] }], [40, 50, 60]], expected: -1, hidden: true },
-		{ args: [[{ id: 1, safeContents: [40, 50] }, { id: 2, safeContents: [40, 50, 60, 70] }], [40, 50, 60]], expected: -1, hidden: true },
-		{ args: [[{ id: 7, safeContents: [] }], []], expected: 0, hidden: true },
+		{
+			args: [[2, 8, 3, 6], 5],
+			expected: -1,
+			name: { 'pt-BR': 'nenhuma árvore bate', en: 'no tree matches' },
+		},
+		{
+			args: [[], 5],
+			expected: -1,
+			hidden: true,
+			name: { 'pt-BR': 'ilha sem árvores', en: 'an island with no trees' },
+		},
+		{
+			args: [[4, 5, 9, 5], 5],
+			expected: 1,
+			hidden: true,
+			name: { 'pt-BR': 'duas árvores com 5 galhos: vale a primeira', en: 'two trees with 5 branches: the first one counts' },
+		},
+		{
+			args: [bigIsland, 5],
+			expected: bigIsland.indexOf(5),
+			hidden: true,
+			name: { 'pt-BR': 'uma ilha com 200 árvores', en: 'an island with 200 trees' },
+		},
 	],
 	hints: [
-		{ 'pt-BR': 'Em JavaScript, `[1, 2] === [1, 2]` é `false`. Por quê?', en: 'In JavaScript, `[1, 2] === [1, 2]` is `false`. Why?' },
-		{ 'pt-BR': '`===` compara referências de arrays, não o conteúdo. Escreva uma função que compare elemento a elemento.', en: '`===` compares array references, not contents. Write a function that compares element by element.' },
-		{ 'pt-BR': 'Arrays com tamanhos diferentes nunca são iguais: verifique isso primeiro.', en: 'Arrays with different lengths are never equal: check that first.' },
+		{
+			'pt-BR': 'O capitão faz uma coisa só, várias vezes: chega numa árvore e conta. Que estrutura repete algo pra cada posição do array?',
+			en: 'The captain does one thing, over and over: walk up to a tree and count. What repeats something for each position of an array?',
+		},
+		{
+			'pt-BR': 'Um `for` com `i` de `0` até `trees.length - 1`. Dentro dele, compare `trees[i]` com `branches`.',
+			en: 'A `for` with `i` from `0` to `trees.length - 1`. Inside it, compare `trees[i]` with `branches`.',
+		},
+		{
+			'pt-BR': 'Achou? `return i` na hora, sem esperar o laço acabar. O `return -1` fica depois do laço, pra quando nenhuma árvore bateu.',
+			en: 'Found it? `return i` right there, without waiting for the loop to end. The `return -1` goes after the loop, for when no tree matched.',
+		},
 	],
 };
 
-export const linearSearchExercises = [pirateTreasure, lostOrange, bobsIdea, hiddenChamber, suspectsSafe];
+export const linearSearchExercises = [pirateTreasure];

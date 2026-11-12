@@ -56,7 +56,8 @@ npm run dev        # http://localhost:4321
 | `src/algorithms/` | Cada algoritmo é um `AlgorithmDef`. `steps` é um generator que emite `Step`s para o player. `run` é a versão simples que os testes comparam com o trace. |
 | `src/exercises/` | Exercícios: starter e solução em TS (o JS é derivado), testes visíveis e ocultos, dicas nos dois idiomas. |
 | `src/lib/runner/` | Executor. `core.ts` é puro: transpila e roda os testes. `worker.ts` e `client.ts` criam um Web Worker novo por execução, com timeout de 3s. |
-| `src/components/` | Componentes MDX (`AlgoPlayer`, `Exercise`, `Quiz`), as ilhas React e a landing. |
+| `src/components/` | Componentes MDX (`AlgoPlayer`, `Practice`, `Quiz`), as ilhas React, a tela de resolver em tela cheia (`solve/`) e a landing. |
+| `src/game/` | A cena dos exercícios: `engine.ts` transforma os índices que o código leu em batidas, e `scenes/` desenha. |
 | `src/gfx/stage/` | Fundo em WebGPU: partículas (`sim.wgsl`), rastro, bloom e composição. |
 | `src/content/docs/` | As lições. A raiz é pt-BR e `en/` é inglês. |
 | `scripts/brand/` | Fontes HTML das imagens da marca, renderizadas com Chrome headless. |
@@ -69,8 +70,10 @@ npm run dev        # http://localhost:4321
 
 ### Adicionando um exercício
 
-1. Adicione um `ExerciseDef` em `src/exercises/`. O teste garante que a solução passa e o starter não.
-2. Crie a página em `src/content/docs/.../<slug>.mdx`, e a versão em `en/`, com `<Exercise id="<id>" />`.
+Cada lição tem uma escada de cinco exercícios, cada um resolvido numa página própria em tela cheia (`/solve/<id>/`). A skill `algo-exercise` em `.claude/skills/` tem a receita completa (história, temas, testes, cena).
+
+1. Adicione um `ExerciseDef` em `src/exercises/` com `lesson` e `order` (1 a 5). Os testes garantem que a solução passa, o starter falha e a história é curta.
+2. Inclua no grupo `exercises([...])` da lição em `astro.config.mjs`. O `<Practice lesson="..." />` da lição e a tela de resolver pegam sozinhos.
 
 ### Segurança
 

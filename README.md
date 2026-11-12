@@ -58,7 +58,8 @@ npm run dev        # http://localhost:4321
 | `src/algorithms/` | Each algorithm is an `AlgorithmDef`. `steps` is a generator that emits `Step`s for the player, and `run` is the plain version the tests compare the trace against. |
 | `src/exercises/` | Exercise definitions: starter and solution in TS (JS is derived), visible and hidden tests, and hints in both languages. |
 | `src/lib/runner/` | The code runner. `core.ts` is pure: it transpiles and runs the tests. `worker.ts` and `client.ts` spawn a fresh Web Worker per run, with a 3s timeout. |
-| `src/components/` | MDX components (`AlgoPlayer`, `Exercise`, `Quiz`), the React islands and the landing page. |
+| `src/components/` | MDX components (`AlgoPlayer`, `Practice`, `Quiz`), the React islands, the full-screen solve screen (`solve/`) and the landing page. |
+| `src/game/` | The exercise stage: `engine.ts` turns the indexes the learner's code read into beats, and `scenes/` draws them. |
 | `src/gfx/stage/` | The WebGPU background: particle simulation (`sim.wgsl`), trail, bloom and composite. |
 | `src/content/docs/` | The lessons. The root is pt-BR and `en/` is English. |
 | `src/styles/` | Design tokens (`tokens.css`) and the Starlight theme. |
@@ -72,8 +73,10 @@ npm run dev        # http://localhost:4321
 
 ### Add an exercise
 
-1. Add an `ExerciseDef` in `src/exercises/`. The tests make sure the solution passes and the starter fails.
-2. Create the page in `src/content/docs/.../<slug>.mdx`, plus its `en/` twin, with `<Exercise id="<id>" />`.
+Each lesson has a ladder of five exercises, each solved on its own full-screen page (`/solve/<id>/`). The `algo-exercise` skill in `.claude/skills/` has the full recipe (story, themes, tests, scene).
+
+1. Add an `ExerciseDef` in `src/exercises/` with its `lesson` and `order` (1 to 5). The tests make sure the solution passes, the starter fails and the story stays short.
+2. Add it to the lesson's `exercises([...])` group in `astro.config.mjs`. The lesson's `<Practice lesson="..." />` and the solve screen pick it up on their own.
 
 ## Deploying
 

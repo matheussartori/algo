@@ -1,0 +1,10 @@
+---
+import SolvePage from '../../components/solve/SolvePage.astro';
+import { exerciseList } from '../../exercises';
+
+export function getStaticPaths() {
+	return exerciseList.map((exercise) => ({ params: { id: exercise.id } }));
+}
+---
+
+<SolvePage id={Astro.params.id} lang="pt-BR" />

@@ -7,6 +7,7 @@ sidebar:
 
 import AlgoPlayer from '~/components/AlgoPlayer.astro';
 import Quiz from '~/components/Quiz.astro';
+import Practice from '~/components/Practice.astro';
 
 ## The idea
 
@@ -89,4 +90,8 @@ Time is **O(log n)** and extra memory is **O(1)**.
 	explanation="With `low = mid`, when `low` and `high` are neighbors, `mid` equals `low` and the range never shrinks. (`Math.trunc` gives the same result here because indexes are never negative.)"
 />
 
-Want to practice? Start with [the library's book](/en/search/binary-search-exercises/library-book/).
+## Practice
+
+Five exercises, easiest first. Each one opens a full-screen editor with a small scene that acts out your code.
+
+<Practice lesson="search/binary-search" />

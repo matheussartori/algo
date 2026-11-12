@@ -37,7 +37,12 @@ describe.each(Object.values(exercises))('$id', (exercise) => {
 		for (const hint of exercise.hints) expect(hint.en && hint['pt-BR']).toBeTruthy();
 	});
 
-	if (exercise.id.startsWith('binary-search/library-book') || exercise.id.startsWith('binary-search/bakery')) {
+	it('names every test and keeps the story short', () => {
+		for (const test of exercise.tests) expect(test.name?.en && test.name['pt-BR']).toBeTruthy();
+		for (const lang of ['pt-BR', 'en'] as const) expect(exercise.story[lang].split(/\s+/).length).toBeLessThanOrEqual(70);
+	});
+
+	if (exercise.id.startsWith('binary-search/')) {
 		it('rejects a linear scan', () => {
 			const response = run(linearScan(exercise.entry));
 			expect(response.kind).toBe('ok');
@@ -47,6 +52,16 @@ describe.each(Object.values(exercises))('$id', (exercise) => {
 });
 
 describe('runner', () => {
+	it('records the indexes the code read, in order', () => {
+		const response = execute({
+			code: 'function f(a, t) { for (let i = a.length - 1; i >= 0; i--) if (a[i] === t) return i; return -1 }',
+			lang: 'js',
+			entry: 'f',
+			tests: [{ args: [[1, 2, 3], 2], expected: 1 }],
+		});
+		expect(response).toMatchObject({ kind: 'ok', results: [{ pass: true, trace: [2, 1] }] });
+	});
+
 	const tests = [{ args: [1, 2], expected: 3 }];
 
 	it('reports syntax errors', () => {

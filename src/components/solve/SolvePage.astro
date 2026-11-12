@@ -1,0 +1,121 @@
+---
+import markDark from '../../assets/brand/mark-dark.svg';
+import markLight from '../../assets/brand/mark-light.svg';
+import { exercises, ladder, lessonHref, solveHref } from '../../exercises';
+import { fontLinks } from '../../lib/fonts.mjs';
+import { iconLinks } from '../../lib/head.mjs';
+import { type Locale, t } from '../../lib/i18n';
+import { tsToJsStarter } from '../../lib/runner/core';
+import Workbench from './Workbench';
+import '../../styles/solve.css';
+
+interface Props {
+	id: string;
+	lang: Locale;
+}
+
+const { id, lang } = Astro.props;
+const exercise = exercises[id];
+if (!exercise) throw new Error(`Unknown exercise "${id}"`);
+
+const lessons: Record<string, { 'pt-BR': string; en: string }> = {
+	'search/linear-search': { 'pt-BR': 'Busca linear', en: 'Linear search' },
+	'search/binary-search': { 'pt-BR': 'Busca binária', en: 'Binary search' },
+};
+const lessonTitle = lessons[exercise.lesson]?.[lang] ?? exercise.lesson;
+const back = lessonHref(exercise.lesson, lang);
+const steps = ladder(exercise.lesson);
+const nextExercise = steps.slice(exercise.order).find((e) => e !== null) ?? null;
+const next = nextExercise ? { href: solveHref(nextExercise.id, lang), title: nextExercise.title[lang] } : null;
+const js = { starter: tsToJsStarter(exercise.starter), solution: tsToJsStarter(exercise.solution) };
+const otherLang: Locale = lang === 'en' ? 'pt-BR' : 'en';
+const title = `${exercise.title[lang]} · ${lessonTitle} | algo`;
+const site = Astro.site ?? new URL('https://algo.mattsartori.com.br');
+---
+
+<!doctype html>
+<html lang={lang} data-theme="dark">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content" />
+		<title>{title}</title>
+		<meta name="description" content={exercise.story[lang].replace(/\*\*/g, '')} />
+		<link rel="canonical" href={new URL(solveHref(id, lang), site).href} />
+		<link rel="alternate" hreflang="pt-BR" href={new URL(solveHref(id, 'pt-BR'), site).href} />
+		<link rel="alternate" hreflang="en" href={new URL(solveHref(id, 'en'), site).href} />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		{iconLinks.map((l) => (l.tag === 'link' ? <link {...l.attrs} /> : <meta {...l.attrs} />))}
+		{fontLinks.map((l) => <link {...l.attrs} />)}
+		<!-- same theme memory as the docs (Starlight's key), applied before paint -->
+		<script is:inline>
+			try {
+				const stored = localStorage.getItem('starlight-theme');
+				const theme = stored === 'light' || stored === 'dark' ? stored : matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+				document.documentElement.dataset.theme = theme;
+			} catch {}
+		</script>
+	</head>
+	<body class="solve">
+		<header class="solve-bar">
+			<a class="solve-bar__brand" href={lang === 'en' ? '/en/' : '/'}>
+				<img class="solve-bar__mark solve-bar__mark--dark" src={markDark.src} alt="" width="20" height="20" />
+				<img class="solve-bar__mark solve-bar__mark--light" src={markLight.src} alt="" width="20" height="20" />
+				<span>algo</span>
+			</a>
+			<nav class="solve-bar__crumbs" aria-label="breadcrumb">
+				<a href={back}>{lessonTitle}</a>
+				<span aria-hidden="true">/</span>
+				<span aria-current="page">{exercise.title[lang]}</span>
+			</nav>
+			<ol class="solve-ladder" aria-label={t(lang, 'exercise.ladder')}>
+				{
+					steps.map((step, i) =>
+						step ? (
+							<li>
+								<a
+									href={solveHref(step.id, lang)}
+									data-id={step.id}
+									aria-current={step.id === id ? 'step' : undefined}
+									title={`${i + 1}. ${step.title[lang]}`}
+								>
+									{i + 1}
+								</a>
+							</li>
+						) : (
+							<li>
+								<span title={`${i + 1}. ${t(lang, 'exercise.soon')}`} aria-disabled="true">
+									{i + 1}
+								</span>
+							</li>
+						),
+					)
+				}
+			</ol>
+			<div class="solve-bar__end">
+				<a class="solve-bar__link" href={back}>{t(lang, 'exercise.backToLesson')}</a>
+				<a class="solve-bar__link" href={solveHref(id, otherLang)} hreflang={otherLang} lang={otherLang}>{t(lang, 'exercise.otherLang')}</a>
+				<button class="solve-bar__theme" type="button" aria-label="Theme" data-theme-toggle>
+					<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 0 18V3Z" /><circle cx="12" cy="12" r="8.25" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+				</button>
+			</div>
+		</header>
+		<main class="solve-main">
+			<Workbench client:load exercise={exercise} js={js} lang={lang} lessonHref={back} next={next} />
+		</main>
+		<script>
+			document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+				const root = document.documentElement;
+				const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+				root.dataset.theme = next;
+				try {
+					localStorage.setItem('starlight-theme', next);
+				} catch {}
+			});
+			for (const link of document.querySelectorAll<HTMLAnchorElement>('.solve-ladder a[data-id]')) {
+				try {
+					if (localStorage.getItem(`algo:solved:${link.dataset.id}`)) link.dataset.done = 'true';
+				} catch {}
+			}
+		</script>
+	</body>
+</html>

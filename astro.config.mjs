@@ -6,12 +6,20 @@ import { wgslVitePlugin } from '@vgpu/wgsl/loader-vite';
 import { fontLinks } from './src/lib/fonts.mjs';
 import { SITE, iconLinks } from './src/lib/head.mjs';
 
-/** @param {string} directory */
-const exercises = (directory) => ({
+/**
+ * A lesson's exercises live outside Starlight, on the full-screen solve route.
+ * Links are written for the root locale; src/routeData.ts prefixes them on /en/ pages.
+ * @param {[id: string, pt: string, en: string][]} items
+ */
+const exercises = (items) => ({
 	label: 'Exercícios',
 	translations: { en: 'Exercises' },
-	collapsed: true,
-	items: [{ autogenerate: { directory } }],
+	collapsed: false,
+	items: items.map(([id, pt, en], i) => ({
+		label: `${i + 1}. ${pt}`,
+		translations: { en: `${i + 1}. ${en}` },
+		link: `/solve/${id}/`,
+	})),
 });
 
 // https://astro.build/config
@@ -68,9 +76,9 @@ export default defineConfig({
 					translations: { en: 'Search' },
 					items: [
 						'search/linear-search',
-						exercises('search/linear-search-exercises'),
+						exercises([['linear-search/pirate-treasure', 'O mapa do Barba-Rala', "Captain Stubble's map"]]),
 						'search/binary-search',
-						exercises('search/binary-search-exercises'),
+						exercises([['binary-search/frog-mail', 'Correio do Sapo Ribas', 'Ribbit Post']]),
 					],
 				},
 			],

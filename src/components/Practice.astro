@@ -1,0 +1,41 @@
+---
+import { ladder, solveHref } from '../exercises';
+import { t, toLocale } from '../lib/i18n';
+
+interface Props {
+	/** Lesson slug without locale, e.g. `search/linear-search`. */
+	lesson: string;
+}
+
+const lang = toLocale(Astro.locals.starlightRoute?.lang);
+const steps = ladder(Astro.props.lesson);
+---
+
+<ol class="algo-practice not-content">
+	{
+		steps.map((step, i) => (
+			<li data-open={step ? 'true' : 'false'}>
+				<span class="algo-practice__n">{i + 1}</span>
+				{step ? (
+					<a href={solveHref(step.id, lang)} data-id={step.id}>
+						<span class="algo-practice__title">{step.title[lang]}</span>
+						<span class="algo-practice__meta">
+							{t(lang, `exercise.difficulty${i + 1}` as Parameters<typeof t>[1])}
+							<span class="algo-practice__done">{t(lang, 'exercise.done')}</span>
+						</span>
+					</a>
+				) : (
+					<span class="algo-practice__soon">{t(lang, 'exercise.soon')}</span>
+				)}
+			</li>
+		))
+	}
+</ol>
+
+<script>
+	for (const link of document.querySelectorAll<HTMLAnchorElement>('.algo-practice a[data-id]')) {
+		try {
+			if (localStorage.getItem(`algo:solved:${link.dataset.id}`)) link.dataset.done = 'true';
+		} catch {}
+	}
+</script>
