@@ -1,39 +1,88 @@
-# algo
+<p align="center">
+  <img src=".github/assets/banner.png" alt="algo: algorithms, step by step" width="100%" />
+</p>
 
-Algoritmos e estruturas de dados, passo a passo, em TypeScript e JavaScript.
-Cada tópico combina explicação, visualização interativa (com modo **Prever**), exercícios com testes rodando no navegador e perguntas de revisão.
+<p align="center">
+  <a href="https://github.com/matheussartori/algo/actions/workflows/ci.yml"><img src="https://github.com/matheussartori/algo/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/code-MIT-efe8dd?labelColor=161311" alt="Code: MIT" /></a>
+  <a href="https://creativecommons.org/licenses/by/4.0/"><img src="https://img.shields.io/badge/content-CC%20BY%204.0-efe8dd?labelColor=161311" alt="Content: CC BY 4.0" /></a>
+</p>
 
-## Rodando
+<p align="center">
+  <a href="https://algo.mattsartori.com.br">Website</a> ·
+  <a href="README.pt-BR.md">Português</a> ·
+  <a href="CONTRIBUTING.md">Contributing</a>
+</p>
+
+---
+
+**algo** teaches algorithms and data structures by running them. Every topic pairs a short explanation with a step-by-step player, a **Predict** mode that asks you for the next move before showing it, exercises whose tests run in your browser, and review questions. The content is in Brazilian Portuguese and English. The code is in TypeScript and JavaScript.
+
+## Features
+
+- **Step-by-step player.** Each algorithm is written once as a generator. The player, the highlighted source line and the variable panel all read from that same trace.
+- **Predict mode.** Click the cell you think the algorithm will touch next. You get feedback on each step and a running score.
+- **Exercises in the browser.** Write the solution in TypeScript or JavaScript. Visible and hidden tests run in a Web Worker with a timeout. Some exercises cap array reads to enforce O(log n).
+- **Two languages.** pt-BR is the root locale and English lives under `/en/`.
+- **WebGPU landing.** A particle swarm forms arrays, trees and growth curves as you scroll. Without WebGPU the page still works fully in plain CSS. The animation respects `prefers-reduced-motion`.
+- **Static and private.** There are no accounts and no analytics. Exercise drafts stay in `localStorage`.
+
+## Quick start
+
+Requires Node 22+.
 
 ```sh
+git clone https://github.com/matheussartori/algo.git
+cd algo
 npm install
-npm run dev      # http://localhost:4321
-npm test         # Vitest: algoritmos, exercícios e runner
-npm run check    # astro check (tipos)
-npm run build
+npm run dev        # http://localhost:4321
 ```
 
-## Arquitetura
-
-| Pasta | O que tem |
+| Script | What it does |
 | --- | --- |
-| `src/algorithms/` | Cada algoritmo escrito **uma vez** como generator (`steps`) que emite `Step`s. O player, o destaque de linha e o modo Prever leem dele. `run` é a versão simples, usada nos testes para conferir o trace. |
-| `src/exercises/` | Definição dos exercícios: starter e solução em TS (a versão JS é derivada), testes visíveis/ocultos, dicas em pt-BR e en. `maxReads` limita leituras no array para exigir O(log n). |
-| `src/lib/runner/` | Executor: `core.ts` (puro, transpila TS com sucrase e roda os testes), `worker.ts` e `client.ts` (Web Worker novo por execução, timeout de 3s). |
-| `src/components/` | Wrappers `.astro` usados no MDX (`AlgoPlayer`, `Exercise`, `Quiz`) e as ilhas React. |
-| `src/content/docs/` | Conteúdo. Raiz = pt-BR, `en/` = inglês. |
+| `npm run dev` | Dev server with hot reload |
+| `npm test` | Vitest: algorithms, exercises and the code runner |
+| `npm run check` | `astro check` (types and templates) |
+| `npm run build` | Static site in `dist/`, including the sitemap |
+| `npm run preview` | Serves the build locally |
+| `npm run brand` | Re-renders OG images, icons, favicon and this banner (needs Google Chrome) |
 
-### Adicionando um algoritmo
+## Stack
 
-1. Crie `src/algorithms/<tema>/<nome>.ts` exportando um `AlgorithmDef` e registre em `src/algorithms/index.ts`.
-2. Use no MDX: `<AlgoPlayer algo="<id>" input={{ ... }} />` (acrescente `predict` para começar no modo Prever).
-3. `npm test` valida que as linhas existem e que o trace bate com `run`.
+[Astro](https://astro.build) and [Starlight](https://starlight.astro.build) for the docs, React islands for the player and the exercises, CodeMirror for the editor, and [sucrase](https://github.com/alangpierce/sucrase) to transpile TypeScript in the worker. [GSAP](https://gsap.com) and [Lenis](https://lenis.dev) handle motion on the landing, and [vgpu](https://www.npmjs.com/package/vgpu) with WGSL shaders draws the background.
 
-### Adicionando um exercício
+## How it is organised
 
-1. Adicione um `ExerciseDef` em `src/exercises/` (o teste garante que a solução passa e o starter não).
-2. Crie a página em `src/content/docs/.../<slug>.mdx` (e a versão em `en/`) com `<Exercise id="<id>" />`.
+| Path | Contents |
+| --- | --- |
+| `src/algorithms/` | Each algorithm is an `AlgorithmDef`. `steps` is a generator that emits `Step`s for the player, and `run` is the plain version the tests compare the trace against. |
+| `src/exercises/` | Exercise definitions: starter and solution in TS (JS is derived), visible and hidden tests, and hints in both languages. |
+| `src/lib/runner/` | The code runner. `core.ts` is pure: it transpiles and runs the tests. `worker.ts` and `client.ts` spawn a fresh Web Worker per run, with a 3s timeout. |
+| `src/components/` | MDX components (`AlgoPlayer`, `Exercise`, `Quiz`), the React islands and the landing page. |
+| `src/gfx/stage/` | The WebGPU background: particle simulation (`sim.wgsl`), trail, bloom and composite. |
+| `src/content/docs/` | The lessons. The root is pt-BR and `en/` is English. |
+| `src/styles/` | Design tokens (`tokens.css`) and the Starlight theme. |
+| `scripts/brand/` | HTML sources for the brand images, rendered with headless Chrome. |
 
-### Segurança
+### Add an algorithm
 
-O código do aluno roda num Web Worker: sem acesso ao DOM, e um loop infinito é encerrado. **Não é um sandbox para código de terceiros.** Se um dia for possível compartilhar código entre usuários, rode-o num `<iframe sandbox>` de outra origem ou com QuickJS.
+1. Create `src/algorithms/<topic>/<name>.ts` exporting an `AlgorithmDef`, and register it in `src/algorithms/index.ts`.
+2. Use it in MDX: `<AlgoPlayer algo="<id>" input={{ ... }} />`. Add `predict` to open in Predict mode.
+3. `npm test` checks that every referenced line exists and that the trace matches `run`.
+
+### Add an exercise
+
+1. Add an `ExerciseDef` in `src/exercises/`. The tests make sure the solution passes and the starter fails.
+2. Create the page in `src/content/docs/.../<slug>.mdx`, plus its `en/` twin, with `<Exercise id="<id>" />`.
+
+## Deploying
+
+The build is a static site, so any static host works (Vercel, Netlify, Cloudflare Pages, GitHub Pages). The production domain is set in `src/lib/head.mjs` (`SITE`). The sitemap, canonical URLs and OpenGraph tags all derive from it.
+
+## Contributing
+
+Corrections, new topics, translations and bug reports are all welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request, and follow the [Code of Conduct](CODE_OF_CONDUCT.md). Please report security issues privately, as described in [SECURITY.md](SECURITY.md).
+
+## License
+
+The code is under the [MIT License](LICENSE). Lessons, exercises and images are under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). See the [terms of use](https://algo.mattsartori.com.br/en/terms/) for details.

@@ -1,0 +1,210 @@
+---
+import { Image } from 'astro:assets';
+import { fontLinks } from '../../lib/fonts.mjs';
+import { iconLinks } from '../../lib/head.mjs';
+import markDark from '../../assets/brand/mark-dark.svg';
+import type { Locale } from '../../lib/i18n';
+import AlgoPlayer from '../AlgoPlayer.astro';
+import { copy } from './copy';
+import '../../styles/landing.css';
+
+interface Props {
+	lang: Locale;
+}
+
+const { lang } = Astro.props;
+const c = copy[lang];
+const p = c.prefix;
+const site = Astro.site ?? new URL('https://algo.mattsartori.com.br');
+const canonical = new URL(`${p}/`, site).href;
+const ogImage = new URL(`/og/${lang}.png`, site).href;
+const alternates = [
+	{ hreflang: 'pt-BR', href: new URL('/', site).href },
+	{ hreflang: 'en', href: new URL('/en/', site).href },
+	{ hreflang: 'x-default', href: new URL('/', site).href },
+];
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'WebSite',
+	name: 'algo',
+	url: canonical,
+	inLanguage: lang,
+	description: c.description,
+	license: 'https://creativecommons.org/licenses/by/4.0/',
+};
+---
+
+<!doctype html>
+<html lang={lang} data-theme="dark">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{c.title}</title>
+		<meta name="description" content={c.description} />
+		<link rel="canonical" href={canonical} />
+		{alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		{iconLinks.map((l) => (l.tag === 'link' ? <link {...l.attrs} /> : <meta {...l.attrs} />))}
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="algo" />
+		<meta property="og:title" content={c.title} />
+		<meta property="og:description" content={c.description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:locale" content={lang === 'en' ? 'en_US' : 'pt_BR'} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content={c.title} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={c.title} />
+		<meta name="twitter:description" content={c.description} />
+		<meta name="twitter:image" content={ogImage} />
+		<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+		{fontLinks.map((l) => <link {...l.attrs} />)}
+	</head>
+	<body class="landing">
+		<canvas id="field" aria-hidden="true"></canvas>
+
+		<header class="nav">
+			<div class="nav__inner container">
+				<a class="wordmark" href={`${p}/`} aria-label="algo">
+					<Image src={markDark} alt="" width={28} height={28} />
+					<span>algo</span>
+				</a>
+				<nav class="nav__links" aria-label={c.nav.path}>
+					<a href="#trilha">{c.nav.path}</a>
+					<a href="#metodo">{c.nav.method}</a>
+					<a href={c.switchHref} hreflang={lang === 'en' ? 'pt-BR' : 'en'}>{c.switchLabel}</a>
+				</nav>
+				<a class="algo-button nav__action" href={`${p}/getting-started/`}>{c.nav.start}</a>
+			</div>
+		</header>
+
+		<main>
+			<section class="hero" aria-labelledby="hero-head">
+				<div class="stage-anchor stage-anchor--hero" data-stage="hero" aria-hidden="true"></div>
+				<div class="hero__inner container">
+					<h1 id="hero-head" class="hero__head">
+						<span class="hero__line">{c.hero.head[0]}</span>
+						<span class="hero__line">{c.hero.head[1]}</span>
+					</h1>
+					<p class="hero__lede">{c.hero.lede}</p>
+					<div class="hero__actions">
+						<a class="algo-button algo-button--large" href={`${p}/search/linear-search/`}>{c.hero.primary}</a>
+						<a class="hero__secondary" href={`${p}/getting-started/`}>{c.hero.secondary}</a>
+					</div>
+				</div>
+				<div class="hero__foot container">
+					<p class="hero__status" role="status" aria-live="off">
+						<span>low <b data-field="low">0</b></span>
+						<span>mid <b data-field="mid">31</b></span>
+						<span>high <b data-field="high">63</b></span>
+					</p>
+				</div>
+			</section>
+
+			<section class="chapter" aria-labelledby="chapter-head">
+				<div class="chapter__pin container">
+					<div class="stage-anchor stage-anchor--chapter" data-stage="chapter" aria-hidden="true"></div>
+					<h2 id="chapter-head" class="chapter__head">{c.chapter.head}</h2>
+					<div class="chapter__count">
+						<span class="chapter__number" data-field="remaining">64</span>
+						<span class="chapter__unit">{c.chapter.remaining}</span>
+					</div>
+					<ol class="chapter__steps">
+						{c.chapter.steps.map((step) => <li>{step}</li>)}
+					</ol>
+				</div>
+			</section>
+
+			<section class="try container" aria-labelledby="try-head">
+				<div class="try__intro">
+					<h2 id="try-head" class="section-head">{c.try.head}</h2>
+					<p class="try__lede">{c.try.lede}</p>
+					<div class="stage-anchor stage-anchor--try" data-stage="try" aria-hidden="true"></div>
+				</div>
+				<div class="try__player">
+					<AlgoPlayer
+						algo="binary-search"
+						lang={lang}
+						input={{ array: [4, 9, 15, 22, 28, 35, 41, 50, 57, 63, 70, 78, 86, 93], target: 57 }}
+						predict
+						compact
+					/>
+				</div>
+			</section>
+
+			<section class="method container" id="metodo" aria-labelledby="method-head">
+				<div class="method__intro">
+					<h2 id="method-head" class="section-head">{c.method.head}</h2>
+					<p>{c.method.lede}</p>
+					<div class="stage-anchor stage-anchor--method" data-stage="method" aria-hidden="true"></div>
+				</div>
+				<ol class="method__steps">
+					{
+						c.method.steps.map((s) => (
+							<li>
+								<h3>{s.title}</h3>
+								<p>{s.body}</p>
+							</li>
+						))
+					}
+				</ol>
+			</section>
+
+			<section class="invariant" aria-label={c.invariant.caption}>
+				<figure class="invariant__inner container">
+					<blockquote class="invariant__statement">{c.invariant.statement}</blockquote>
+					<div class="stage-anchor invariant__ruler" data-stage="invariant" aria-hidden="true"></div>
+					<figcaption>{c.invariant.caption}</figcaption>
+				</figure>
+			</section>
+
+			<section class="path container" id="trilha" aria-labelledby="path-head">
+				<div class="path__intro">
+					<h2 id="path-head" class="section-head">{c.path.head}</h2>
+					<p>{c.path.lede}</p>
+					<div class="stage-anchor stage-anchor--path" data-stage="path" aria-hidden="true"></div>
+				</div>
+				<ol class="path__rows">
+					{
+						c.path.rows.map((row) => (
+							<li>
+								<a class="path__row" href={row.href}>
+									<span class="path__title">{row.title}</span>
+									<code class="path__cost">{row.cost}</code>
+									<span class="path__detail">{row.detail}</span>
+									<span class="path__open">{c.path.open}</span>
+								</a>
+							</li>
+						))
+					}
+				</ol>
+			</section>
+		</main>
+
+		<footer class="footer">
+			<div class="footer__inner container">
+				<a class="wordmark wordmark--large" href={`${p}/`} aria-label="algo">
+					<Image src={markDark} alt="" width={56} height={56} />
+					<span>algo</span>
+				</a>
+				<p class="footer__line">{c.footer.line}</p>
+				<div class="stage-anchor stage-anchor--footer" data-stage="footer" aria-hidden="true"></div>
+				<nav class="footer__links" aria-label="algo">
+					{c.path.rows.map((row) => <a href={row.href}>{row.title}</a>)}
+					<a href={`${p}/getting-started/`}>{c.hero.secondary}</a>
+					<a href="https://github.com/matheussartori/algo">{c.footer.source}</a>
+					<a href={`${p}/terms/`}>{c.footer.terms}</a>
+					<a href="https://github.com/matheussartori/algo/blob/main/LICENSE">{c.footer.license}</a>
+					<a href={c.switchHref}>{c.switchLabel}</a>
+				</nav>
+			</div>
+		</footer>
+
+		<script>
+			import { startLanding } from './field';
+			startLanding();
+		</script>
+	</body>
+</html>

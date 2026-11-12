@@ -1,7 +1,21 @@
 {
   "name": "algo",
+  "version": "0.1.0",
+  "description": "Algorithms and data structures, step by step: interactive player, Predict mode and in-browser exercises.",
+  "private": true,
   "type": "module",
-  "version": "0.0.1",
+  "license": "MIT",
+  "homepage": "https://algo.mattsartori.com.br",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matheussartori/algo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/matheussartori/algo/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -10,7 +24,8 @@
     "astro": "astro",
     "test": "vitest run",
     "check": "astro check",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "brand": "node scripts/brand/render.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^7.1.8",
@@ -25,18 +40,22 @@
     "@types/react-dom": "^19.3.0",
     "astro": "^7.3.6",
     "codemirror": "^6.0.2",
+    "gsap": "^3.15.1",
+    "lenis": "^1.3.27",
     "motion": "^14.12.0",
     "nanostores": "^1.5.5",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "sharp": "^0.35.3",
     "shiki": "^4.6.0",
-    "sucrase": "^3.35.1"
+    "sucrase": "^3.35.1",
+    "vgpu": "^0.6.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@vgpu/wgsl": "^0.6.0",
+    "@webgpu/types": "^0.1.74",
     "typescript": "^6.0.3",
     "vitest": "^5.1.0"
-  },
-  "private": true
+  }
 }

@@ -3,13 +3,22 @@ import { toLocale } from '../lib/i18n';
 import QuizIsland from './quiz/Quiz';
 
 interface Props {
+	/** Only needed outside Starlight pages. */
+	lang?: string;
 	question: string;
 	options: string[];
 	answer: number;
 	explanation: string;
 }
 
-const lang = toLocale(Astro.locals.starlightRoute.lang);
+const lang = toLocale(Astro.props.lang ?? routeLang());
+function routeLang(): string | undefined {
+	try {
+		return Astro.locals.starlightRoute.lang;
+	} catch {
+		return undefined; // a page outside Starlight (the landing) passes `lang` instead
+	}
+}
 ---
 
 <QuizIsland client:visible {...Astro.props} lang={lang} />

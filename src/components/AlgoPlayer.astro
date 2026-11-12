@@ -5,18 +5,29 @@ import { toLocale } from '../lib/i18n';
 import Player from './player/Player';
 
 interface Props {
+	/** Only needed outside Starlight pages. */
+	lang?: string;
 	/** Algorithm id from `src/algorithms`. */
 	algo: string;
 	input: unknown;
 	/** Start in "predict" mode. */
 	predict?: boolean;
+	/** Leave out the 3D stage. */
+	compact?: boolean;
 }
 
-const { algo, input, predict = false } = Astro.props;
+const { algo, input, predict = false, compact = false } = Astro.props;
 const definition = algorithms[algo];
 if (!definition) throw new Error(`Unknown algorithm "${algo}"`);
 
-const lang = toLocale(Astro.locals.starlightRoute.lang);
+const lang = toLocale(Astro.props.lang ?? routeLang());
+function routeLang(): string | undefined {
+	try {
+		return Astro.locals.starlightRoute.lang;
+	} catch {
+		return undefined; // a page outside Starlight (the landing) passes `lang` instead
+	}
+}
 const codeHtml = await codeToHtml(definition.code, {
 	lang: 'ts',
 	themes: { light: 'github-light', dark: 'github-dark' },
@@ -24,4 +35,4 @@ const codeHtml = await codeToHtml(definition.code, {
 });
 ---
 
-<Player client:visible algo={algo} input={input} lang={lang} codeHtml={codeHtml} predict={predict} />
+<Player client:visible algo={algo} input={input} lang={lang} codeHtml={codeHtml} predict={predict} compact={compact} />

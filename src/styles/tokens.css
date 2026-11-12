@@ -1,0 +1,82 @@
+/*
+ * algo — design tokens.
+ * The palette is the algorithm's own states: graphite for the array, bone for the
+ * text, vermilion for the pointer under examination (mid), mint for found.
+ * Dark is the native mode (Starlight's default); light is derived, not inverted.
+ */
+:root {
+  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
+  --text-xs: 0.8125rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.25rem; --text-xl: 1.5625rem; --text-2xl: 1.953rem; --text-3xl: 2.441rem;
+  --text-display-s: clamp(2.25rem, 4vw + 0.5rem, 3.75rem);
+  --text-display: clamp(3.25rem, 7.2vw, 7.5rem);
+  --text-section: clamp(2.25rem, 3vw + 1rem, 4rem);
+  --text-statement: clamp(2.5rem, 5.4vw, 5.75rem);
+  --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.625rem);
+  --text-lead: clamp(1.125rem, 0.35vw + 1rem, 1.375rem);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
+  --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
+  --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
+
+  /* dark (native) */
+  --color-paper: oklch(16.5% 0.009 60);
+  --color-paper-2: oklch(20.5% 0.01 60);
+  --color-paper-3: oklch(25% 0.011 60);
+  --color-rule: oklch(31% 0.012 60);
+  --color-muted: oklch(70% 0.013 70);
+  --color-ink-2: oklch(84% 0.01 75);
+  --color-ink: oklch(95.5% 0.008 80);
+  --color-accent: oklch(67% 0.205 33);
+  --color-accent-ink: oklch(17% 0.03 33);
+  --color-accent-soft: oklch(30% 0.08 33);
+  --color-found: oklch(83% 0.14 166);
+  --color-found-ink: oklch(20% 0.04 166);
+  --color-focus: oklch(72% 0.2 33);
+  --color-error: oklch(70% 0.17 25);
+  --color-success: var(--color-found);
+  /* the 3D field */
+  --gfx-bar: oklch(60% 0.014 70);
+  --gfx-neon: oklch(93% 0.035 75);
+  --glow-accent: color-mix(in oklab, var(--color-accent) 60%, transparent);
+  --glow-soft: color-mix(in oklab, var(--color-accent) 22%, transparent);
+  --glow-ink: color-mix(in oklab, var(--color-ink) 30%, transparent);
+  --gfx-dim: oklch(29% 0.011 60);
+  /* code */
+  --tok-keyword: oklch(74% 0.16 33); --tok-string: oklch(82% 0.12 166); --tok-number: oklch(84% 0.1 85);
+  --tok-comment: var(--color-muted); --tok-type: oklch(84% 0.08 230); --tok-fn: var(--color-ink);
+
+  --font-display: "Tektur", "Switzer", ui-sans-serif, system-ui, sans-serif;
+  /* the machine's own figures and the wordmark: a dot-matrix, lit like an LED panel */
+  --font-figure: "Array", "Tektur", ui-monospace, monospace;
+  --font-body: "Switzer", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+  --font-outlier: var(--font-mono);
+
+  --radius-control: 10px; --radius-card: 14px; --radius-cell: 8px; --radius-pill: 999px;
+  --rule-hair: 1px; --shadow-card: none;
+  --tracking-display: -0.025em;
+}
+
+:root[data-theme='light'] {
+  --color-paper: oklch(97.2% 0.004 80);
+  --color-paper-2: oklch(94% 0.006 75);
+  --color-paper-3: oklch(90.5% 0.008 70);
+  --color-rule: oklch(85% 0.009 70);
+  --color-muted: oklch(47% 0.013 60);
+  --color-ink-2: oklch(33% 0.012 60);
+  --color-ink: oklch(19% 0.012 60);
+  --color-accent: oklch(57% 0.205 31);
+  --color-accent-ink: oklch(98.5% 0.008 33);
+  --color-accent-soft: oklch(91% 0.045 33);
+  --color-found: oklch(53% 0.12 166);
+  --color-found-ink: oklch(98.5% 0.01 166);
+  --color-focus: oklch(55% 0.2 31);
+  --color-error: oklch(52% 0.19 27);
+  --gfx-bar: oklch(80% 0.012 70);
+  --gfx-neon: oklch(45% 0.03 60);
+  --glow-accent: color-mix(in oklab, var(--color-accent) 35%, transparent);
+  --glow-soft: color-mix(in oklab, var(--color-accent) 12%, transparent);
+  --glow-ink: transparent;
+  --gfx-dim: oklch(91% 0.006 75);
+  --tok-keyword: oklch(52% 0.19 31); --tok-string: oklch(48% 0.11 166); --tok-number: oklch(52% 0.12 70); --tok-type: oklch(46% 0.1 240);
+}

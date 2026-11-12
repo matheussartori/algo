@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!-- OpenGraph card (1200 x 630) and README banner (1280 x 640). Rendered to PNG by scripts/brand/render.mjs (headless Chrome). -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Tektur:wdth,wght@75..100,500..800&family=JetBrains+Mono:wght@400;600&display=block" rel="stylesheet" />
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,600&display=block" rel="stylesheet" />
+<style>
+	:root {
+		--paper: oklch(16.5% 0.009 60);
+		--ink: oklch(94% 0.012 80);
+		--ink-2: oklch(78% 0.012 75);
+		--muted: oklch(60% 0.012 70);
+		--neon: oklch(93% 0.035 75);
+		--accent: oklch(67% 0.205 33);
+		--found: oklch(83% 0.14 166);
+	}
+	* { box-sizing: border-box; margin: 0; }
+	html, body { width: 100vw; height: 100vh; overflow: hidden; background: var(--paper); }
+	body {
+		position: relative;
+		color: var(--ink);
+		font-family: 'Switzer', sans-serif;
+		font-stretch: 92%;
+	}
+	body::after {
+		/* scanlines and a vignette, as on the site */
+		content: '';
+		position: absolute;
+		inset: 0;
+		background:
+			repeating-linear-gradient(0deg, rgb(0 0 0 / 0.04) 0 1px, transparent 1px 3px),
+			radial-gradient(ellipse at 50% 45%, transparent 55%, rgb(0 0 0 / 0.45));
+		pointer-events: none;
+	}
+	.mark { position: absolute; left: 72px; top: 64px; display: flex; align-items: center; gap: 14px; }
+	.mark img { width: 44px; height: 44px; }
+	.mark span { font: 700 44px/1 'Tektur'; font-stretch: 75%; letter-spacing: -0.01em; }
+	h1 {
+		position: absolute;
+		left: 72px;
+		top: 196px;
+		width: 620px;
+		font: 600 86px/0.98 'Tektur';
+		letter-spacing: -0.02em;
+	}
+	p {
+		position: absolute;
+		left: 72px;
+		bottom: 72px;
+		width: 600px;
+		font-size: 26px;
+		text-wrap: balance;
+		line-height: 1.35;
+		color: var(--ink-2);
+	}
+	.url {
+		position: absolute;
+		right: 72px;
+		bottom: 40px;
+		font: 400 20px/1 'JetBrains Mono';
+		color: var(--muted);
+	}
+	.array {
+		position: absolute;
+		right: 72px;
+		top: 72px;
+		width: 470px;
+		height: 400px;
+		display: flex;
+		align-items: flex-end;
+		gap: 5px;
+	}
+	.col {
+		flex: 1;
+		border: 2px solid var(--neon);
+		border-bottom: 0;
+		border-radius: 2px 2px 0 0;
+		box-shadow: 0 0 10px color-mix(in oklab, var(--neon) 60%, transparent), 0 0 24px color-mix(in oklab, var(--neon) 22%, transparent), inset 0 0 8px color-mix(in oklab, var(--neon) 30%, transparent);
+	}
+	.col.out { opacity: 0.18; box-shadow: none; }
+	.col.mid {
+		border-color: var(--accent);
+		background: linear-gradient(to top, color-mix(in oklab, var(--accent) 70%, transparent), color-mix(in oklab, var(--accent) 25%, transparent));
+		box-shadow: 0 0 18px var(--accent), 0 0 46px color-mix(in oklab, var(--accent) 60%, transparent), inset 0 0 12px var(--accent);
+	}
+	.beam {
+		position: absolute;
+		height: 3px;
+		bottom: -6px;
+		border-radius: 3px;
+		background: var(--accent);
+		box-shadow: 0 0 10px var(--accent), 0 0 30px var(--accent);
+	}
+	.mirror {
+		position: absolute;
+		right: 72px;
+		top: 478px;
+		width: 470px;
+		height: 70px;
+		opacity: 0.22;
+		transform: scaleY(-1);
+		mask-image: linear-gradient(to top, black, transparent);
+		display: flex;
+		align-items: flex-end;
+		gap: 5px;
+	}
+</style>
+</head>
+<body>
+	<div class="mark"><img src="../../src/assets/brand/mark-dark.svg" alt="" /><span>algo</span></div>
+	<h1 id="head"></h1>
+	<p id="lede"></p>
+	<div class="url">algo.mattsartori.com.br</div>
+	<div class="array" id="array"><div class="beam" id="beam"></div></div>
+	<div class="mirror" id="mirror"></div>
+	<script>
+		const copy = {
+			'pt-BR': { head: 'Algoritmos, passo a passo.', lede: 'Veja rodar, preveja o próximo passo, escreva o seu.' },
+			en: { head: 'Algorithms, step by step.', lede: 'Watch it run, predict the next step, write your own.' },
+		};
+		const lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'pt-BR';
+		document.documentElement.lang = lang;
+		document.getElementById('head').textContent = copy[lang].head;
+		document.getElementById('lede').textContent = copy[lang].lede;
+
+		// 32 sorted columns mid-search: low = 16, high = 31, looking at 23
+		const n = 32, low = 16, high = 31, mid = 23;
+		const array = document.getElementById('array');
+		const mirror = document.getElementById('mirror');
+		for (let i = 0; i < n; i++) {
+			const h = 18 + 82 * (0.15 + 0.85 * (i / (n - 1))) * (0.92 + 0.08 * Math.sin(i * 2.3));
+			const out = i < low || i > high;
+			for (const host of [array, mirror]) {
+				const c = document.createElement('div');
+				c.className = 'col' + (out ? ' out' : '') + (i === mid ? ' mid' : '');
+				c.style.height = (out ? h * 0.22 : h) + '%';
+				host.append(c);
+			}
+		}
+		const beam = document.getElementById('beam');
+		const step = 470 / n;
+		beam.style.left = low * step + 'px';
+		beam.style.width = (high - low + 1) * step - 5 + 'px';
+		document.fonts.ready.then(() => document.body.setAttribute('data-ready', ''));
+	</script>
+</body>
+</html>

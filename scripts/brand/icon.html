@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!-- App icons. ?size=<px>&pad=<0..0.5>&round=<0|1>; rendered by scripts/brand/render.mjs. -->
+<style>
+	* { margin: 0; }
+	html, body { overflow: hidden; background: transparent; }
+	svg { display: block; }
+</style>
+</head>
+<body>
+	<script>
+		const q = new URLSearchParams(location.search);
+		const size = Number(q.get('size') ?? 512);
+		const pad = Number(q.get('pad') ?? 0.14); // fraction of the side kept clear around the mark
+		const round = q.get('round') !== '0';
+		const s = 32;
+		const inner = s * (1 - 2 * pad);
+		const k = inner / 24; // the mark is drawn on a 24-unit box
+		const o = s * pad;
+		const bar = (x, y, h, lit) =>
+			lit
+				? `<rect x="${o + x * k}" y="${o + y * k}" width="${5 * k}" height="${h * k}" rx="${1.3 * k}" fill="#ff5a36" filter="url(#g)"/>`
+				: `<rect x="${o + (x + 0.75) * k}" y="${o + (y + 0.75) * k}" width="${3.5 * k}" height="${(h - 0.75) * k}" rx="${1 * k}" fill="none" stroke="#efe8dd" stroke-width="${1.5 * k}"/>`;
+		document.body.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${s} ${s}" width="${size}" height="${size}">
+			<defs><filter id="g" x="-80%" y="-40%" width="260%" height="180%"><feGaussianBlur stdDeviation="${0.9 * k}" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+			<rect width="${s}" height="${s}" rx="${round ? 7 : 0}" fill="#161311"/>
+			${bar(0, 10, 13, false)}${bar(9.5, 5, 18, true)}${bar(19, 0, 23, false)}
+		</svg>`;
+		document.body.setAttribute('data-ready', '');
+	</script>
+</body>
+</html>

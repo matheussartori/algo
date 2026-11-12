@@ -3,6 +3,8 @@ import { algorithms } from '../../algorithms';
 import { type Locale, t } from '../../lib/i18n';
 import { collect, type Step } from '../../lib/trace';
 import { ArrayView } from './ArrayView';
+import { Icon } from './Icon';
+import { Stage3D } from './Stage3D';
 
 interface Props {
 	algo: string;
@@ -12,6 +14,8 @@ interface Props {
 	codeHtml: string;
 	/** Start in predict mode. */
 	predict?: boolean;
+	/** No 3D stage: for pages that already have a scene behind the player. */
+	compact?: boolean;
 }
 
 const SPEEDS = [0.5, 1, 2] as const;
@@ -29,7 +33,7 @@ function questionFor(steps: Step[], i: number): Question {
 	return null;
 }
 
-export default function Player({ algo, input, lang, codeHtml, predict = false }: Props) {
+export default function Player({ algo, input, lang, codeHtml, predict = false, compact = false }: Props) {
 	const steps = useMemo(() => collect(algorithms[algo], input), [algo, input]);
 	const [index, setIndex] = useState(0);
 	const [playing, setPlaying] = useState(false);
@@ -103,7 +107,7 @@ export default function Player({ algo, input, lang, codeHtml, predict = false }:
 				: undefined;
 
 	return (
-		<div className="algo-player not-content" data-mode={mode}>
+		<div className={`algo-player not-content${compact ? ' algo-player--compact' : ''}`} data-mode={mode}>
 			<div className="algo-player__toolbar">
 				<div className="algo-segmented" role="tablist">
 					{(['watch', 'predict'] as const).map((m) => (
@@ -123,6 +127,7 @@ export default function Player({ algo, input, lang, codeHtml, predict = false }:
 			</div>
 
 			<div className="algo-player__stage">
+				{!compact && <Stage3D frame={step.frame} />}
 				<ArrayView frame={step.frame} uid={uid} onPick={question ? answer : undefined} marked={marked} />
 				{question && (
 					<div className="algo-player__prompt">
@@ -158,10 +163,10 @@ export default function Player({ algo, input, lang, codeHtml, predict = false }:
 
 			<div className="algo-player__controls">
 				<button type="button" className="algo-icon" onClick={() => go(0)} disabled={index === 0} aria-label={t(lang, 'player.first')}>
-					⏮
+					<Icon name="first" />
 				</button>
 				<button type="button" className="algo-icon" onClick={() => go(index - 1)} disabled={index === 0} aria-label={t(lang, 'player.prev')}>
-					◀
+					<Icon name="prev" />
 				</button>
 				{mode === 'watch' ? (
 					<button
@@ -170,7 +175,7 @@ export default function Player({ algo, input, lang, codeHtml, predict = false }:
 						onClick={() => (atEnd ? (go(0), setPlaying(true)) : setPlaying((p) => !p))}
 						aria-label={t(lang, playing ? 'player.pause' : atEnd ? 'player.restart' : 'player.play')}
 					>
-						{playing ? '⏸' : atEnd ? '↻' : '▶'}
+						<Icon name={playing ? 'pause' : atEnd ? 'restart' : 'play'} />
 					</button>
 				) : null}
 				<button
@@ -180,7 +185,7 @@ export default function Player({ algo, input, lang, codeHtml, predict = false }:
 					disabled={atEnd || question !== null}
 					aria-label={t(lang, 'player.next')}
 				>
-					▶︎|
+					<Icon name="next" />
 				</button>
 				{mode === 'watch' && (
 					<>

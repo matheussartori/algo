@@ -5,6 +5,8 @@ import { tsToJsStarter } from '../lib/runner/core';
 import ExerciseIsland from './exercise/Exercise';
 
 interface Props {
+	/** Only needed outside Starlight pages. */
+	lang?: string;
 	/** Exercise id from `src/exercises`. */
 	id: string;
 }
@@ -12,7 +14,14 @@ interface Props {
 const exercise = exercises[Astro.props.id];
 if (!exercise) throw new Error(`Unknown exercise "${Astro.props.id}"`);
 
-const lang = toLocale(Astro.locals.starlightRoute.lang);
+const lang = toLocale(Astro.props.lang ?? routeLang());
+function routeLang(): string | undefined {
+	try {
+		return Astro.locals.starlightRoute.lang;
+	} catch {
+		return undefined; // a page outside Starlight (the landing) passes `lang` instead
+	}
+}
 const js = { starter: tsToJsStarter(exercise.starter), solution: tsToJsStarter(exercise.solution) };
 ---
 
