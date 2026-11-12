@@ -1,0 +1,19 @@
+---
+import { exercises } from '../exercises';
+import { toLocale } from '../lib/i18n';
+import { tsToJsStarter } from '../lib/runner/core';
+import ExerciseIsland from './exercise/Exercise';
+
+interface Props {
+	/** Exercise id from `src/exercises`. */
+	id: string;
+}
+
+const exercise = exercises[Astro.props.id];
+if (!exercise) throw new Error(`Unknown exercise "${Astro.props.id}"`);
+
+const lang = toLocale(Astro.locals.starlightRoute.lang);
+const js = { starter: tsToJsStarter(exercise.starter), solution: tsToJsStarter(exercise.solution) };
+---
+
+<ExerciseIsland client:visible exercise={exercise} js={js} lang={lang} />

@@ -1,0 +1,27 @@
+---
+title: The hidden chamber
+sidebar:
+  order: 4
+---
+
+import { Image } from 'astro:assets';
+import Exercise from '~/components/Exercise.astro';
+import cover from '~/assets/exercises/1-1-4.png';
+
+<Image src={cover} alt="" width={720} />
+
+While exploring an ancient cave, you found chambers with mysterious symbols on the walls. The cave is a matrix: each **row** is a chamber and each number is one of its symbols.
+
+Return the index of the chamber (the row) that contains the target symbol, or `-1` if it is not in the cave.
+
+
+```ts title="Example"
+const caveLayout = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9],
+]
+findChamberIndexBySymbol(caveLayout, 5) // 1
+```
+
+<Exercise id="linear-search/hidden-chamber" />

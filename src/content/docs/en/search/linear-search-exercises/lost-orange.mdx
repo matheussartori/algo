@@ -1,0 +1,23 @@
+---
+title: The lost orange
+sidebar:
+  order: 2
+---
+
+import { Image } from 'astro:assets';
+import Exercise from '~/components/Exercise.astro';
+import cover from '~/assets/exercises/1-1-2.png';
+
+<Image src={cover} alt="" width={720} />
+
+You are packing a fruit basket for a picnic, but you lost the orange somewhere in it. Your friend Sarah is allergic to oranges and can't help you look. Find the orange quickly!
+
+Return the index of the **first** orange, or `-1` if there is none.
+
+
+```ts title="Example"
+const fruitBasket = ['apple', 'banana', 'grape', 'orange']
+findOrangeIndexInBasket(fruitBasket, 'orange') // 3
+```
+
+<Exercise id="linear-search/lost-orange" />

@@ -1,0 +1,26 @@
+---
+title: O doce da padaria
+sidebar:
+  order: 2
+---
+
+import { Image } from 'astro:assets';
+import Exercise from '~/components/Exercise.astro';
+import cover from '~/assets/exercises/2-1-2.png';
+
+<Image src={cover} alt="" width={720} />
+
+Numa padaria movimentada, cada doce tem um código, e a vitrine está em **ordem alfabética** de código. A confeiteira Sarah precisa achar um doce específico.
+
+Retorne o índice do doce, ou `-1` se ele não estiver na vitrine.
+
+:::caution[Use busca binária]
+Os testes ocultos usam arrays grandes e contam quantos elementos sua função lê. Uma busca linear não passa.
+:::
+
+```ts title="Exemplo"
+const bakeryPastries = ['Croissant2022', 'CroissantAlmond', /* … 50 doces … */ 'SconeVanilla']
+findPastryIndex(bakeryPastries, 'SconeLemon') // 46
+```
+
+<Exercise id="binary-search/bakery-pastry" />

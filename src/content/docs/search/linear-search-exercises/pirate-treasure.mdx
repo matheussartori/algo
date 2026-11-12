@@ -1,0 +1,23 @@
+---
+title: O tesouro do pirata
+sidebar:
+  order: 1
+---
+
+import { Image } from 'astro:assets';
+import Exercise from '~/components/Exercise.astro';
+import cover from '~/assets/exercises/1-1-1.png';
+
+<Image src={cover} alt="" width={720} />
+
+O Capitão Tom enterrou seu tesouro atrás de uma árvore com um número específico de galhos, indicado no mapa. Nesta ilha, cada árvore tem uma quantidade diferente de galhos. Dado um array com o número de galhos de cada árvore, encontre o índice da árvore com a quantidade indicada.
+
+Se nenhuma árvore tiver essa quantidade, retorne `-1`.
+
+
+```ts title="Exemplo"
+const branchesOnTrees = [2, 4, 6, 8, 10]
+findTreeIndexByBranches(branchesOnTrees, 6) // 2
+```
+
+<Exercise id="linear-search/pirate-treasure" />

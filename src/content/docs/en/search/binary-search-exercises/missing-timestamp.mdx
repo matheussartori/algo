@@ -1,0 +1,24 @@
+---
+title: The missing timestamp
+sidebar:
+  order: 4
+---
+
+import { Image } from 'astro:assets';
+import Exercise from '~/components/Exercise.astro';
+import cover from '~/assets/exercises/2-1-4.png';
+
+<Image src={cover} alt="" width={720} />
+
+A crypto exchange logs transactions with timestamps that start at `0` and go up by 1. Because of a network failure, some records were lost. Given the **sorted** array of timestamps (no duplicates), find the **smallest** missing timestamp.
+
+:::caution[Use binary search]
+Hidden tests use large arrays and count how many elements your function reads. A linear scan will not pass.
+:::
+
+```ts title="Example"
+const transactions = [0, 1, 2, 3, 5, 6, 7, 8]
+findMissingTimestamp(transactions) // 4
+```
+
+<Exercise id="binary-search/missing-timestamp" />

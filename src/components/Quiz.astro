@@ -1,0 +1,15 @@
+---
+import { toLocale } from '../lib/i18n';
+import QuizIsland from './quiz/Quiz';
+
+interface Props {
+	question: string;
+	options: string[];
+	answer: number;
+	explanation: string;
+}
+
+const lang = toLocale(Astro.locals.starlightRoute.lang);
+---
+
+<QuizIsland client:visible {...Astro.props} lang={lang} />

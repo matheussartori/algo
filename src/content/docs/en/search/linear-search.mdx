@@ -1,0 +1,61 @@
+---
+title: Linear search
+description: Find an element by looking at one at a time.
+sidebar:
+  order: 1
+---
+
+import AlgoPlayer from '~/components/AlgoPlayer.astro';
+import Quiz from '~/components/Quiz.astro';
+
+## The idea
+
+You lost your key in a row of drawers. With no clue at all, the only sure way is to open one drawer at a time, from the first to the last, until you find it.
+
+That is **linear search**: go through the elements in order and compare each one with the target. It works on **any** array, sorted or not.
+
+## Watch it run
+
+Click **▶** or step forward one at a time. Follow the highlighted line in the code and the value of `i`.
+
+<AlgoPlayer algo="linear-search" input={{ array: [42, 7, 19, 3, 25, 11], target: 25 }} />
+
+## Now you predict
+
+In this array the target **does not exist**. Before each step, click the index the search will examine. When you think it will stop, pick *None*.
+
+<AlgoPlayer algo="linear-search" input={{ array: [5, 8, 1, 9], target: 6 }} predict />
+
+## Cost
+
+| Case | Comparisons | When it happens |
+| --- | --- | --- |
+| Best | 1 | The target is the first element |
+| Worst | n | The target is last or missing |
+| Average | ~n/2 | The target is at a random position |
+
+Time grows in proportion to the array: **O(n)**. The only extra memory is the variable `i`: **O(1)**.
+
+## Where you already use it
+
+In JavaScript, `Array.prototype.indexOf`, `includes`, `find` and `findIndex` are linear searches. They are great for small arrays or a one-off lookup. If you will search the same large array many times, a `Set` or `Map` (O(1) lookup on average) or a sorted array with [binary search](/en/search/binary-search/) usually pays off.
+
+## Test your memory
+
+Answer without scrolling back up.
+
+<Quiz
+	question="An array has 1,000 elements and the target is not in it. How many comparisons does linear search make?"
+	options={['1', '10', '500', '1,000']}
+	answer={3}
+	explanation="To be sure the target is missing, it has to look at every element."
+/>
+
+<Quiz
+	question="Which of these situations **requires** linear search instead of binary search?"
+	options={['The array is sorted', 'The array is not sorted and you will search only once', 'The array has 1 million elements']}
+	answer={1}
+	explanation="Binary search only works on sorted arrays. Sorting costs O(n log n), more than a single O(n) linear search."
+/>
+
+Ready to practice? Start with [the pirate's treasure](/en/search/linear-search-exercises/pirate-treasure/).

@@ -1,0 +1,24 @@
+---
+title: O timestamp perdido
+sidebar:
+  order: 4
+---
+
+import { Image } from 'astro:assets';
+import Exercise from '~/components/Exercise.astro';
+import cover from '~/assets/exercises/2-1-4.png';
+
+<Image src={cover} alt="" width={720} />
+
+Uma exchange de criptomoedas registra as transações com timestamps que começam em `0` e sobem de 1 em 1. Por causa de uma falha na rede, alguns registros se perderam. Dado o array **ordenado** de timestamps (sem repetições), encontre o **menor** timestamp que está faltando.
+
+:::caution[Use busca binária]
+Os testes ocultos usam arrays grandes e contam quantos elementos sua função lê. Uma busca linear não passa.
+:::
+
+```ts title="Exemplo"
+const transactions = [0, 1, 2, 3, 5, 6, 7, 8]
+findMissingTimestamp(transactions) // 4
+```
+
+<Exercise id="binary-search/missing-timestamp" />

@@ -1,0 +1,29 @@
+---
+title: Como estudar aqui
+description: O ciclo de cada tópico e por que ele funciona.
+---
+
+import AlgoPlayer from '~/components/AlgoPlayer.astro';
+
+Cada tópico segue o mesmo ciclo. Ele não é arbitrário: cada etapa vem de pesquisa sobre como as pessoas aprendem.
+
+1. **Intuição.** Um problema do mundo real e a ideia por trás da solução.
+2. **Visualização.** O algoritmo roda passo a passo, com a linha de código atual destacada.
+3. **Previsão.** Você decide o próximo passo antes de vê-lo. Estudos mostram que visualizações só ensinam de verdade quando você interage com elas, não quando só assiste.
+4. **Prática.** Exercícios com testes. Alguns testes são ocultos, para você pensar nos casos difíceis em vez de decorar a resposta.
+5. **Revisão.** Perguntas rápidas para responder de memória. Lembrar ativamente fixa mais do que reler.
+
+## Experimente o player
+
+Clique em **▶** para assistir, ou troque para **Prever** e tente adivinhar qual elemento a busca vai examinar a seguir.
+
+<AlgoPlayer algo="linear-search" input={{ array: [7, 3, 9, 4, 1], target: 4 }} />
+
+## Exercícios
+
+- Escolha **TypeScript** ou **JavaScript** no topo do editor. Sua escolha e seu código ficam salvos neste navegador.
+- Use **⌘/Ctrl + Enter** para rodar os testes.
+- Travou? Tente por uns 20 minutos, depois peça uma **dica**. As dicas vão do empurrãozinho até quase a resposta.
+- A **solução** só libera depois que você roda os testes pelo menos uma vez. Se olhar, feche e reescreva de memória.
+
+O código roda num **Web Worker**, separado da página: um loop infinito não trava nada e é interrompido depois de 3 segundos.

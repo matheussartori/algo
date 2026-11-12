@@ -1,0 +1,510 @@
+/* algo — interactive components. Colors come from Starlight tokens, so light/dark just work. */
+
+:root {
+	--algo-radius: 0.6rem;
+	--algo-surface: var(--sl-color-gray-7, #f6f6f6);
+	--algo-border: var(--sl-color-hairline);
+	--algo-active: var(--sl-color-accent);
+	--algo-found: var(--sl-color-green);
+	--algo-wrong: var(--sl-color-red);
+	--algo-line: color-mix(in srgb, var(--sl-color-accent) 18%, transparent);
+	--algo-tok-keyword: #8b1fa9;
+	--algo-tok-string: #116329;
+	--algo-tok-number: #0550ae;
+	--algo-tok-comment: #6e7781;
+	--algo-tok-type: #953800;
+	--algo-tok-fn: #6639ba;
+}
+
+:root[data-theme='dark'] {
+	--algo-surface: var(--sl-color-gray-6, #1b1b1f);
+	--algo-tok-keyword: #ff7b72;
+	--algo-tok-string: #a5d6ff;
+	--algo-tok-number: #79c0ff;
+	--algo-tok-comment: #8b949e;
+	--algo-tok-type: #ffa657;
+	--algo-tok-fn: #d2a8ff;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+/* ---------- shared controls ---------- */
+
+.algo-button {
+	font: inherit;
+	font-size: var(--sl-text-sm);
+	font-weight: 600;
+	padding: 0.45rem 0.9rem;
+	border-radius: 999px;
+	border: 1px solid var(--sl-color-accent);
+	background: var(--sl-color-accent);
+	color: var(--sl-color-black);
+	cursor: pointer;
+	transition: transform 120ms ease, opacity 120ms ease;
+}
+:root[data-theme='dark'] .algo-button:not(.algo-button--ghost) {
+	color: var(--sl-color-black);
+	background: var(--sl-color-accent-high);
+	border-color: var(--sl-color-accent-high);
+}
+.algo-button:active:not(:disabled) {
+	transform: scale(0.97);
+}
+.algo-button:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+.algo-button--ghost {
+	background: transparent;
+	color: var(--sl-color-text);
+	border-color: var(--algo-border);
+}
+
+.algo-segmented {
+	display: inline-flex;
+	padding: 3px;
+	gap: 2px;
+	border-radius: 999px;
+	background: var(--algo-surface);
+	border: 1px solid var(--algo-border);
+}
+.algo-segmented button {
+	font: inherit;
+	font-size: var(--sl-text-xs);
+	font-weight: 600;
+	padding: 0.3rem 0.8rem;
+	border: 0;
+	border-radius: 999px;
+	background: transparent;
+	color: var(--sl-color-gray-2);
+	cursor: pointer;
+}
+.algo-segmented button[aria-selected='true'] {
+	background: var(--sl-color-bg);
+	color: var(--sl-color-white);
+	box-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
+}
+
+.algo-icon {
+	font: inherit;
+	min-width: 2.25rem;
+	height: 2.25rem;
+	border-radius: 999px;
+	border: 1px solid var(--algo-border);
+	background: var(--sl-color-bg);
+	color: var(--sl-color-text);
+	cursor: pointer;
+}
+.algo-icon:disabled {
+	opacity: 0.35;
+	cursor: not-allowed;
+}
+.algo-icon--primary {
+	background: var(--sl-color-accent);
+	border-color: var(--sl-color-accent);
+	color: var(--sl-color-black);
+}
+
+.algo-error {
+	color: var(--algo-wrong);
+}
+
+/* ---------- player ---------- */
+
+.algo-player,
+.algo-exercise,
+.algo-quiz {
+	margin-block: 1.5rem;
+	border: 1px solid var(--algo-border);
+	border-radius: var(--algo-radius);
+	background: var(--sl-color-bg);
+	overflow: hidden;
+}
+
+.algo-player__toolbar,
+.algo-exercise__toolbar {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+	padding: 0.6rem 0.75rem;
+	border-bottom: 1px solid var(--algo-border);
+	background: var(--algo-surface);
+	font-size: var(--sl-text-xs);
+	color: var(--sl-color-gray-2);
+}
+.algo-player__counter,
+.algo-exercise__shortcut {
+	margin-inline-start: auto;
+	font-variant-numeric: tabular-nums;
+}
+.algo-player__score {
+	font-weight: 600;
+	color: var(--sl-color-text);
+	font-variant-numeric: tabular-nums;
+}
+
+.algo-player__stage {
+	padding: 1.25rem 0.75rem 0.75rem;
+}
+
+.algo-array {
+	display: flex;
+	gap: 0.35rem;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+.algo-array__slot {
+	display: grid;
+	justify-items: center;
+	gap: 0.2rem;
+	min-width: 2.75rem;
+}
+.algo-array__cell {
+	position: relative;
+	display: grid;
+	place-items: center;
+	min-width: 2.75rem;
+	height: 2.75rem;
+	padding-inline: 0.4rem;
+	border-radius: 0.45rem;
+	border: 1px solid var(--algo-border);
+	background: var(--algo-surface);
+	color: var(--sl-color-text);
+	font: 600 var(--sl-text-sm) / 1 var(--sl-font-mono);
+	transition: opacity 250ms ease, background-color 250ms ease, border-color 250ms ease;
+}
+button.algo-array__cell {
+	cursor: pointer;
+}
+button.algo-array__cell:hover {
+	border-color: var(--sl-color-accent);
+}
+.algo-array__cell[data-state='dimmed'] {
+	opacity: 0.3;
+}
+.algo-array__cell[data-state='found'] {
+	background: color-mix(in srgb, var(--algo-found) 25%, var(--sl-color-bg));
+	border-color: var(--algo-found);
+}
+.algo-array__cell[data-mark='wrong'] {
+	animation: algo-shake 300ms ease;
+	border-color: var(--algo-wrong);
+}
+.algo-array__cell[data-mark='reveal'] {
+	outline: 2px dashed var(--algo-active);
+	outline-offset: 2px;
+}
+.algo-array__focus {
+	position: absolute;
+	inset: -3px;
+	border-radius: 0.55rem;
+	border: 2px solid var(--algo-active);
+	pointer-events: none;
+}
+.algo-array__value {
+	position: relative;
+}
+.algo-array__index {
+	font: var(--sl-text-xs) / 1 var(--sl-font-mono);
+	color: var(--sl-color-gray-3);
+}
+.algo-array__pointers {
+	display: grid;
+	gap: 0.15rem;
+	min-height: 1.1rem;
+}
+.algo-array__pointer {
+	font: 600 0.7rem / 1 var(--sl-font-mono);
+	padding: 0.15rem 0.35rem;
+	border-radius: 0.3rem;
+	background: color-mix(in srgb, var(--sl-color-accent) 18%, transparent);
+	color: var(--sl-color-accent-high);
+}
+.algo-array__pointer[data-pointer='mid'] {
+	background: var(--sl-color-accent);
+	color: var(--sl-color-black);
+}
+
+.algo-player__prompt {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+	margin-top: 1rem;
+	font-size: var(--sl-text-sm);
+	font-weight: 600;
+}
+.algo-player__feedback {
+	margin: 0.5rem 0 0;
+	text-align: center;
+	font-size: var(--sl-text-sm);
+	font-weight: 600;
+}
+.algo-player__feedback[data-kind='right'] {
+	color: var(--algo-found);
+}
+.algo-player__feedback[data-kind='wrong'] {
+	color: var(--algo-wrong);
+}
+.algo-player__note {
+	margin: 0.9rem auto 0;
+	max-width: 46ch;
+	text-align: center;
+	font-size: var(--sl-text-sm);
+	min-height: 2.6em;
+}
+
+.algo-player__body {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	border-top: 1px solid var(--algo-border);
+}
+@media (min-width: 50rem) {
+	.algo-player__body {
+		grid-template-columns: minmax(0, 1fr) 11rem;
+	}
+	.algo-player__vars {
+		border-top: 0 !important;
+		border-inline-start: 1px solid var(--algo-border);
+	}
+}
+.algo-player__code pre {
+	margin: 0;
+	padding: 0.75rem 0;
+	overflow-x: auto;
+	font-size: var(--sl-text-xs);
+	background: transparent !important;
+}
+.algo-player__code .line {
+	display: inline-block;
+	width: 100%;
+	padding-inline: 1rem;
+	transition: background-color 200ms ease;
+}
+.algo-player__code .line.is-current {
+	background: var(--algo-line);
+	box-shadow: inset 3px 0 0 var(--sl-color-accent);
+}
+.algo-player__code .shiki span {
+	color: var(--shiki-light);
+}
+:root[data-theme='dark'] .algo-player__code .shiki span {
+	color: var(--shiki-dark);
+}
+.algo-player__vars {
+	margin: 0;
+	padding: 0.75rem;
+	display: grid;
+	align-content: start;
+	gap: 0.35rem;
+	border-top: 1px solid var(--algo-border);
+	font: var(--sl-text-xs) / 1.4 var(--sl-font-mono);
+}
+.algo-player__vars div {
+	display: flex;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+.algo-player__vars dt {
+	color: var(--sl-color-gray-3);
+}
+.algo-player__vars dd {
+	margin: 0;
+	font-weight: 600;
+}
+
+.algo-player__controls {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	flex-wrap: wrap;
+	padding: 0.6rem 0.75rem;
+	border-top: 1px solid var(--algo-border);
+	background: var(--algo-surface);
+}
+.algo-player__scrub {
+	flex: 1 1 8rem;
+	accent-color: var(--sl-color-accent);
+}
+.algo-player__speed select {
+	font: inherit;
+	font-size: var(--sl-text-xs);
+	padding: 0.3rem;
+	border-radius: 0.4rem;
+	border: 1px solid var(--algo-border);
+	background: var(--sl-color-bg);
+	color: var(--sl-color-text);
+}
+
+@keyframes algo-shake {
+	25% { transform: translateX(-4px); }
+	75% { transform: translateX(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.algo-array__cell[data-mark='wrong'] { animation: none; }
+}
+
+/* ---------- exercise ---------- */
+
+.algo-editor .cm-editor {
+	font-size: var(--sl-text-sm);
+	background: var(--sl-color-bg);
+	color: var(--sl-color-text);
+}
+.algo-editor .cm-editor.cm-focused {
+	outline: none;
+}
+.algo-editor .cm-scroller {
+	font-family: var(--sl-font-mono);
+	min-height: 8rem;
+	max-height: 28rem;
+}
+.algo-editor .cm-gutters {
+	background: var(--algo-surface);
+	border-right: 1px solid var(--algo-border);
+	color: var(--sl-color-gray-3);
+}
+.algo-editor .cm-activeLine,
+.algo-editor .cm-activeLineGutter {
+	background: color-mix(in srgb, var(--sl-color-accent) 7%, transparent);
+}
+.algo-editor .cm-cursor {
+	border-left-color: var(--sl-color-text);
+}
+.algo-editor .cm-selectionBackground,
+.algo-editor .cm-focused .cm-selectionBackground {
+	background: color-mix(in srgb, var(--sl-color-accent) 25%, transparent) !important;
+}
+.algo-editor .tok-keyword,
+.algo-editor .tok-operatorKeyword { color: var(--algo-tok-keyword); }
+.algo-editor .tok-string { color: var(--algo-tok-string); }
+.algo-editor .tok-number,
+.algo-editor .tok-bool,
+.algo-editor .tok-atom { color: var(--algo-tok-number); }
+.algo-editor .tok-comment { color: var(--algo-tok-comment); font-style: italic; }
+.algo-editor .tok-typeName { color: var(--algo-tok-type); }
+.algo-editor .tok-variableName.tok-definition,
+.algo-editor .tok-propertyName.tok-definition { color: var(--algo-tok-fn); }
+
+.algo-exercise__actions {
+	display: flex;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+	padding: 0.75rem;
+	border-top: 1px solid var(--algo-border);
+}
+.algo-exercise__hints,
+.algo-exercise__solution,
+.algo-exercise__results {
+	margin: 0;
+	padding: 0.75rem 1rem;
+	border-top: 1px solid var(--algo-border);
+	font-size: var(--sl-text-sm);
+}
+.algo-exercise__hints {
+	padding-inline-start: 2.25rem;
+	background: color-mix(in srgb, var(--sl-color-orange) 8%, transparent);
+}
+.algo-exercise__solution pre {
+	margin: 0.5rem 0 0;
+	padding: 0.75rem;
+	border-radius: 0.4rem;
+	background: var(--algo-surface);
+	overflow-x: auto;
+	font-size: var(--sl-text-xs);
+}
+.algo-exercise__summary {
+	margin: 0 0 0.5rem;
+	font-weight: 600;
+}
+.algo-exercise__summary[data-pass='true'] {
+	color: var(--algo-found);
+}
+.algo-exercise__tests {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.4rem;
+}
+.algo-exercise__tests li {
+	display: grid;
+	grid-template-columns: 1.25rem minmax(0, 1fr);
+	gap: 0.15rem 0.4rem;
+}
+.algo-exercise__tests code {
+	overflow-wrap: anywhere;
+	font-size: var(--sl-text-xs);
+}
+.algo-exercise__icon {
+	font-weight: 700;
+}
+.algo-exercise__tests li[data-pass='true'] .algo-exercise__icon { color: var(--algo-found); }
+.algo-exercise__tests li[data-pass='false'] .algo-exercise__icon { color: var(--algo-wrong); }
+.algo-exercise__detail {
+	grid-column: 2;
+	color: var(--sl-color-gray-2);
+	font-size: var(--sl-text-xs);
+}
+.algo-exercise__console {
+	margin-top: 0.75rem;
+}
+.algo-exercise__console pre {
+	margin: 0.4rem 0 0;
+	padding: 0.5rem 0.75rem;
+	border-radius: 0.4rem;
+	background: var(--algo-surface);
+	font-size: var(--sl-text-xs);
+}
+
+/* ---------- quiz ---------- */
+
+.algo-quiz {
+	padding: 1rem;
+	display: grid;
+	gap: 0.5rem;
+}
+.algo-quiz legend {
+	float: left;
+	width: 100%;
+	padding: 0;
+	margin-bottom: 0.25rem;
+	font-weight: 600;
+}
+.algo-quiz__option {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--algo-border);
+	border-radius: 0.45rem;
+	cursor: pointer;
+	font-size: var(--sl-text-sm);
+}
+.algo-quiz__option[data-picked='true'] {
+	border-color: var(--sl-color-accent);
+}
+.algo-quiz[data-state='right'] .algo-quiz__option[data-picked='true'] {
+	border-color: var(--algo-found);
+	background: color-mix(in srgb, var(--algo-found) 12%, transparent);
+}
+.algo-quiz[data-state='wrong'] .algo-quiz__option[data-picked='true'] {
+	border-color: var(--algo-wrong);
+}
+.algo-quiz .algo-button {
+	justify-self: start;
+	margin-top: 0.25rem;
+}
+.algo-quiz__feedback {
+	font-size: var(--sl-text-sm);
+}

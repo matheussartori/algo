@@ -1,0 +1,23 @@
+---
+title: A laranja perdida
+sidebar:
+  order: 2
+---
+
+import { Image } from 'astro:assets';
+import Exercise from '~/components/Exercise.astro';
+import cover from '~/assets/exercises/1-1-2.png';
+
+<Image src={cover} alt="" width={720} />
+
+Você está montando uma cesta de frutas para um piquenique, mas perdeu a laranja no meio dela. Sua amiga Sarah é alérgica a laranja e não pode ajudar a procurar. Encontre a laranja rápido!
+
+Retorne o índice da **primeira** laranja, ou `-1` se não houver nenhuma.
+
+
+```ts title="Exemplo"
+const fruitBasket = ['apple', 'banana', 'grape', 'orange']
+findOrangeIndexInBasket(fruitBasket, 'orange') // 3
+```
+
+<Exercise id="linear-search/lost-orange" />

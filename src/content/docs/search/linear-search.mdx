@@ -1,0 +1,61 @@
+---
+title: Busca linear
+description: Procurar um elemento olhando um de cada vez.
+sidebar:
+  order: 1
+---
+
+import AlgoPlayer from '~/components/AlgoPlayer.astro';
+import Quiz from '~/components/Quiz.astro';
+
+## A ideia
+
+Você perdeu a chave numa fileira de gavetas. Sem nenhuma pista, o único jeito garantido é abrir uma gaveta de cada vez, da primeira até a última, até achar.
+
+Essa é a **busca linear**: percorrer os elementos em ordem e comparar cada um com o alvo. Ela funciona com **qualquer** array, ordenado ou não.
+
+## Veja rodando
+
+Clique em **▶** ou avance um passo de cada vez. Acompanhe a linha destacada no código e o valor de `i`.
+
+<AlgoPlayer algo="linear-search" input={{ array: [42, 7, 19, 3, 25, 11], target: 25 }} />
+
+## Agora você prevê
+
+Neste array o alvo **não existe**. Antes de cada passo, clique no índice que a busca vai examinar. Quando achar que ela vai parar, escolha *Nenhum*.
+
+<AlgoPlayer algo="linear-search" input={{ array: [5, 8, 1, 9], target: 6 }} predict />
+
+## Custo
+
+| Caso | Comparações | Quando acontece |
+| --- | --- | --- |
+| Melhor | 1 | O alvo é o primeiro elemento |
+| Pior | n | O alvo é o último ou não existe |
+| Médio | ~n/2 | O alvo está numa posição aleatória |
+
+O tempo cresce na mesma proporção que o array: **O(n)**. A memória extra é só a variável `i`: **O(1)**.
+
+## Onde você já usa
+
+Em JavaScript, `Array.prototype.indexOf`, `includes`, `find` e `findIndex` fazem busca linear. Elas são ótimas para arrays pequenos ou quando você vai procurar uma vez só. Se vai procurar muitas vezes no mesmo array grande, um `Set` ou um `Map` (busca em O(1) na média) ou um array ordenado com [busca binária](/search/binary-search/) costumam valer a pena.
+
+## Teste sua memória
+
+Responda sem rolar a página para cima.
+
+<Quiz
+	question="Um array tem 1.000 elementos e o alvo não está nele. Quantas comparações a busca linear faz?"
+	options={['1', '10', '500', '1.000']}
+	answer={3}
+	explanation="Para ter certeza de que o alvo não existe, ela precisa olhar todos os elementos."
+/>
+
+<Quiz
+	question="Qual destas situações **exige** busca linear em vez de busca binária?"
+	options={['O array está ordenado', 'O array não está ordenado e você vai procurar uma vez só', 'O array tem 1 milhão de elementos']}
+	answer={1}
+	explanation="A busca binária só funciona em arrays ordenados. Ordenar custa O(n log n), mais caro que uma única busca linear O(n)."
+/>
+
+Pronto para praticar? Comece pelo [tesouro do pirata](/search/linear-search-exercises/pirate-treasure/).

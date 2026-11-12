@@ -1,0 +1,26 @@
+---
+title: The spacecraft's navigation
+sidebar:
+  order: 3
+---
+
+import { Image } from 'astro:assets';
+import Exercise from '~/components/Exercise.astro';
+import cover from '~/assets/exercises/2-1-3.png';
+
+<Image src={cover} alt="" width={720} />
+
+A spacecraft explores a distant galaxy guided by signals from celestial bodies. Given a **sorted** array of frequencies and a target frequency, find the index of the frequency closest to the target.
+
+On a tie, return the **smallest** index. The array always has at least one element.
+
+:::caution[Use binary search]
+Hidden tests use large arrays and count how many elements your function reads. A linear scan will not pass.
+:::
+
+```ts title="Example"
+const beaconFrequencies = [100, 200, 300, 400, 500]
+findClosestFrequency(beaconFrequencies, 350) // 2 (300 and 400 tie; keep the smaller index)
+```
+
+<Exercise id="binary-search/spacecraft-navigation" />

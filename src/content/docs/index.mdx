@@ -1,0 +1,31 @@
+---
+title: algo
+description: Algoritmos e estruturas de dados, passo a passo, em TypeScript e JavaScript.
+template: splash
+hero:
+  tagline: Algoritmos e estruturas de dados, passo a passo. Veja o algoritmo rodar, preveja o próximo passo e escreva o seu, em TypeScript ou JavaScript, direto no navegador.
+  actions:
+    - text: Começar
+      link: /getting-started/
+      icon: right-arrow
+    - text: Busca binária
+      link: /search/binary-search/
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid>
+	<Card title="Veja passo a passo" icon="seti:video">
+		Cada algoritmo roda na sua frente, linha por linha, com as variáveis à mostra. Volte, avance, mude a velocidade.
+	</Card>
+	<Card title="Preveja antes de ver" icon="puzzle">
+		No modo **Prever**, você escolhe o próximo passo antes de o algoritmo dar. Assistir ensina pouco; prever ensina muito.
+	</Card>
+	<Card title="Escreva e teste" icon="pencil">
+		Exercícios com testes visíveis e ocultos, em TypeScript ou JavaScript, rodando no seu navegador. Sem instalar nada.
+	</Card>
+	<Card title="Lembre de verdade" icon="star">
+		Perguntas rápidas no fim de cada tópico. Responder de memória fixa o conteúdo melhor do que reler.
+	</Card>
+</CardGrid>

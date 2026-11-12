@@ -1,0 +1,27 @@
+---
+import { codeToHtml } from 'shiki';
+import { algorithms } from '../algorithms';
+import { toLocale } from '../lib/i18n';
+import Player from './player/Player';
+
+interface Props {
+	/** Algorithm id from `src/algorithms`. */
+	algo: string;
+	input: unknown;
+	/** Start in "predict" mode. */
+	predict?: boolean;
+}
+
+const { algo, input, predict = false } = Astro.props;
+const definition = algorithms[algo];
+if (!definition) throw new Error(`Unknown algorithm "${algo}"`);
+
+const lang = toLocale(Astro.locals.starlightRoute.lang);
+const codeHtml = await codeToHtml(definition.code, {
+	lang: 'ts',
+	themes: { light: 'github-light', dark: 'github-dark' },
+	defaultColor: false,
+});
+---
+
+<Player client:visible algo={algo} input={input} lang={lang} codeHtml={codeHtml} predict={predict} />

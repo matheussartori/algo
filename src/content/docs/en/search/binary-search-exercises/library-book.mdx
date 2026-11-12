@@ -1,0 +1,26 @@
+---
+title: The library's book
+sidebar:
+  order: 1
+---
+
+import { Image } from 'astro:assets';
+import Exercise from '~/components/Exercise.astro';
+import cover from '~/assets/exercises/2-1-1.png';
+
+<Image src={cover} alt="" width={720} />
+
+In a huge library, every book has a unique ID number, and the shelf is **sorted** by that number. Librarian Jane needs to find the book a reader asked for.
+
+Return the index of the book, or `-1` if it does not exist.
+
+:::caution[Use binary search]
+Hidden tests use large arrays and count how many elements your function reads. A linear scan will not pass.
+:::
+
+```ts title="Example"
+const libraryBooks = [102, 205, 308, 410, 523, 636, 749, 852, 965, 1078]
+findBookIndex(libraryBooks, 410) // 3
+```
+
+<Exercise id="binary-search/library-book" />
