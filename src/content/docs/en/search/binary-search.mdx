@@ -10,46 +10,46 @@ import Quiz from '~/components/Quiz.astro';
 
 ## The idea
 
-Think of a game: I pick a number from 1 to 100 and you try to guess it. After each guess I say "higher" or "lower". Starting at 1 and counting up works, but it can take 100 guesses. Guessing **50** rules out half the options at once. Then 25 or 75, and so on. You will get it in at most **7 guesses**.
+Picture a game. I pick a number from 1 to 100 and you try to guess it. After each guess I say "higher" or "lower". Starting at 1 and counting up works, but it can take 100 guesses. Guess **50** and you rule out half the options at once. Then 25 or 75, and so on. You'll get it in **7 guesses** at most.
 
-**Binary search** does exactly that on a **sorted** array. It keeps a range `[low, high]` where the target can still be and, at every step, looks at the middle element:
+**Binary search** does that on a **sorted** array. It keeps a range `[low, high]` where the target can still be and, at each step, looks at the middle element:
 
 - If it is the target, we are done.
 - If it is **smaller** than the target, the target can only be to the right: `low = mid + 1`.
 - If it is **larger**, it can only be to the left: `high = mid - 1`.
 
 :::caution[Only works on a sorted array]
-Sorting is what lets one comparison discard a whole half.
+Without the sorting, one comparison can't throw away a whole half.
 :::
 
 ## Watch it run
 
-Watch the `low`, `mid` and `high` pointers, and how discarded elements fade out.
+Keep an eye on the `low`, `mid` and `high` pointers, and on how the discarded elements fade out.
 
 <AlgoPlayer algo="binary-search" input={{ array: [2, 5, 8, 12, 16, 23, 38, 56, 72, 91], target: 23 }} />
 
 ## Now you predict
 
-Before each step, click the **middle** index the search will examine. Hint: `mid = Math.floor((low + high) / 2)`. This target does not exist; when the range becomes empty, pick *None*.
+Before each step, click the **middle** index the search will look at. Hint: `mid = Math.floor((low + high) / 2)`. This target isn't in the array, so when the range gets empty, pick *None*.
 
 <AlgoPlayer algo="binary-search" input={{ array: [3, 9, 14, 20, 27, 31, 40, 48, 55, 61, 70, 84], target: 50 }} predict />
 
 ## The invariant
 
-The secret to writing a bug-free binary search is knowing what **never changes** during the loop:
+To write a binary search without bugs, you need to know what **never changes** during the loop:
 
 > If the target is in the array, it is between `low` and `high` (inclusive).
 
-Every update preserves this. `low = mid + 1` only happens when `array[mid] < target`, so nothing left of `mid + 1` can be the target. When `low > high`, the range is empty and the invariant guarantees the target is missing.
+Every update keeps this true. `low = mid + 1` only happens when `array[mid] < target`, so nothing left of `mid + 1` can be the target. When `low > high`, the range is empty, and the invariant tells you the target isn't there.
 
-The most common bugs break exactly this invariant:
+The most common bugs break this invariant:
 
-- `while (low < high)` instead of `<=`: skips the last remaining element.
-- `low = mid` instead of `mid + 1`: the range may stop shrinking and loop forever.
+- `while (low < high)` instead of `<=` skips the last element left.
+- `low = mid` instead of `mid + 1` can stop the range from shrinking, and then it loops forever.
 
 ## Cost
 
-Each step halves the range. Starting with n elements, after k steps n / 2^k remain. That reaches 1 when k = log₂ n.
+Each step halves the range. With n elements, after k steps you have n / 2^k left, which hits 1 when k = log₂ n.
 
 | n | Linear search (worst) | Binary search (worst) |
 | --- | --- | --- |
@@ -57,14 +57,14 @@ Each step halves the range. Starting with n elements, after k steps n / 2^k rema
 | 1,000,000 | 1,000,000 | 20 |
 | 1,000,000,000 | 1,000,000,000 | 30 |
 
-Time **O(log n)**, extra memory **O(1)**.
+Time is **O(log n)** and extra memory is **O(1)**.
 
 ## Where it shows up
 
-- **`git bisect`** finds the commit that introduced a bug by binary searching the history.
-- Database indexes (B-trees) apply the same idea to find one row among millions.
-- Lodash's `_.sortedIndex` and Python's `bisect` find where to insert a value while keeping order.
-- Beyond arrays: "what is the smallest batch size that does not run out of memory?" is also solved by halving the range of answers.
+- **`git bisect`** finds the commit that introduced a bug by running a binary search over the history.
+- Database indexes (B-trees) use the same idea to find one row among millions.
+- Lodash's `_.sortedIndex` and Python's `bisect` find where to insert a value without breaking the order.
+- It works outside arrays too. "What's the smallest batch size that doesn't run out of memory?" can be solved by halving the range of answers.
 
 ## Test your memory
 
@@ -72,7 +72,7 @@ Time **O(log n)**, extra memory **O(1)**.
 	question="At most, how many comparisons does binary search make on a sorted array of 1,000 elements?"
 	options={['10', '100', '500', '1,000']}
 	answer={0}
-	explanation="2¹⁰ = 1,024, so 10 halvings are enough to reach a single element."
+	explanation="2¹⁰ = 1,024, so 10 halvings get you down to a single element."
 />
 
 <Quiz
@@ -89,4 +89,4 @@ Time **O(log n)**, extra memory **O(1)**.
 	explanation="With `low = mid`, when `low` and `high` are neighbors, `mid` equals `low` and the range never shrinks. (`Math.trunc` gives the same result here because indexes are never negative.)"
 />
 
-Ready to practice? Start with [the library's book](/en/search/binary-search-exercises/library-book/).
+Want to practice? Start with [the library's book](/en/search/binary-search-exercises/library-book/).

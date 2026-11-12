@@ -1,29 +1,29 @@
 ---
 title: How to study here
-description: The loop behind every topic, and why it works.
+description: How each lesson works and why it's built this way.
 ---
 
 import AlgoPlayer from '~/components/AlgoPlayer.astro';
 
-Every topic follows the same loop. It is not arbitrary: each stage comes from research on how people learn.
+Every lesson follows the same routine. The order is on purpose: each part catches a different way of thinking you get it when you don't quite yet.
 
-1. **Intuition.** A real-world problem and the idea behind the solution.
-2. **Visualization.** The algorithm runs step by step, with the current line of code highlighted.
-3. **Prediction.** You decide the next step before you see it. Studies show visualizations only really teach when you interact with them, not when you just watch.
-4. **Practice.** Exercises with tests. Some tests are hidden, so you think about the hard cases instead of memorizing the answer.
-5. **Review.** Quick questions to answer from memory. Active recall sticks better than re-reading.
+1. **Intuition.** It starts with an everyday problem and the idea that solves it, before any code.
+2. **Visualization.** The algorithm runs step by step, with the current line highlighted and the variables beside it.
+3. **Prediction.** Before each step, you guess what comes next. Just watching gives you a nice "got it" feeling, but guessing is where you find out if you really do.
+4. **Practice.** Exercises with tests. Some of them are hidden, so you think about the annoying cases instead of just making the visible ones pass.
+5. **Review.** A few quick questions to answer from memory. Pulling things back out of your head sticks much better than re-reading.
 
 ## Try the player
 
-Click **▶** to watch, or switch to **Predict** and try to guess which element the search examines next.
+Hit **▶** to watch, or switch to **Predict** and try to guess which element the search looks at next.
 
 <AlgoPlayer algo="linear-search" input={{ array: [7, 3, 9, 4, 1], target: 4 }} />
 
-## Exercises
+## About the exercises
 
 - Pick **TypeScript** or **JavaScript** at the top of the editor. Your choice and your code are saved in this browser.
-- Press **⌘/Ctrl + Enter** to run the tests.
-- Stuck? Try for about 20 minutes, then ask for a **hint**. Hints go from a small nudge to almost the answer.
-- The **solution** unlocks only after you run the tests at least once. If you look, close it and rewrite it from memory.
+- **⌘/Ctrl + Enter** runs the tests.
+- Stuck? Give it about 20 minutes before asking for a **hint**. They start as a small nudge and get closer to the answer.
+- The **solution** only shows up after you've run the tests at least once. Peeking is fine, just close it and write it again from memory.
 
-Your code runs in a **Web Worker**, separate from the page: an infinite loop freezes nothing and is stopped after 3 seconds.
+Your code runs in a **Web Worker**, away from the page. So an infinite loop won't freeze anything, it just gets cut off after 3 seconds.

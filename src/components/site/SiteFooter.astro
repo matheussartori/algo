@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets';
+import markDark from '../../assets/brand/mark-dark.svg';
+import markLight from '../../assets/brand/mark-light.svg';
+import type { Locale } from '../../lib/i18n';
+import { chrome } from './chrome';
+
+interface Props {
+	lang: Locale;
+	/** Inside the docs content column: no full-bleed container. */
+	inline?: boolean;
+}
+
+const { lang, inline = false } = Astro.props;
+const c = chrome[lang];
+const year = new Date().getFullYear();
+---
+
+<footer class:list={['site-footer', inline && 'site-footer--inline']}>
+	<div class:list={['site-footer__inner', !inline && 'container']}>
+		<slot />
+		<div class="site-footer__top">
+			<div class="site-footer__brand">
+				<a class="wordmark" href={`${c.prefix}/`} aria-label="algo">
+					<Image class="wordmark__dark" src={markDark} alt="" width={22} height={22} />
+					<Image class="wordmark__light" src={markLight} alt="" width={22} height={22} />
+					<span>algo</span>
+				</a>
+				<p>{c.blurb}</p>
+			</div>
+			<nav class="site-footer__col" aria-label={c.learn}>
+				<h2>{c.learn}</h2>
+				{c.lessons.map((l) => <a href={l.href}>{l.label}</a>)}
+			</nav>
+			<nav class="site-footer__col" aria-label={c.project}>
+				<h2>{c.project}</h2>
+				{c.links.map((l) => <a href={l.href}>{l.label}</a>)}
+			</nav>
+		</div>
+		<div class="site-footer__bottom">
+			<span>© {year} Matheus Sartori</span>
+			<span>{c.license}</span>
+		</div>
+	</div>
+</footer>

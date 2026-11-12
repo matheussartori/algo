@@ -10,19 +10,19 @@ import Quiz from '~/components/Quiz.astro';
 
 ## The idea
 
-You lost your key in a row of drawers. With no clue at all, the only sure way is to open one drawer at a time, from the first to the last, until you find it.
+You lost your key in a row of drawers. With no clue at all, the only sure way is to open one drawer at a time, first to last, until you find it.
 
-That is **linear search**: go through the elements in order and compare each one with the target. It works on **any** array, sorted or not.
+That's **linear search**. You go through the elements in order and compare each one with the target. It works on **any** array, sorted or not.
 
 ## Watch it run
 
-Click **▶** or step forward one at a time. Follow the highlighted line in the code and the value of `i`.
+Hit **▶** or step forward one at a time. Follow the highlighted line in the code and the value of `i`.
 
 <AlgoPlayer algo="linear-search" input={{ array: [42, 7, 19, 3, 25, 11], target: 25 }} />
 
 ## Now you predict
 
-In this array the target **does not exist**. Before each step, click the index the search will examine. When you think it will stop, pick *None*.
+In this array the target **isn't there**. Before each step, click the index the search will look at. When you think it's going to stop, pick *None*.
 
 <AlgoPlayer algo="linear-search" input={{ array: [5, 8, 1, 9], target: 6 }} predict />
 
@@ -34,15 +34,15 @@ In this array the target **does not exist**. Before each step, click the index t
 | Worst | n | The target is last or missing |
 | Average | ~n/2 | The target is at a random position |
 
-Time grows in proportion to the array: **O(n)**. The only extra memory is the variable `i`: **O(1)**.
+Time grows in proportion to the array, so it's **O(n)**. The only extra memory is the variable `i`, so **O(1)**.
 
 ## Where you already use it
 
-In JavaScript, `Array.prototype.indexOf`, `includes`, `find` and `findIndex` are linear searches. They are great for small arrays or a one-off lookup. If you will search the same large array many times, a `Set` or `Map` (O(1) lookup on average) or a sorted array with [binary search](/en/search/binary-search/) usually pays off.
+In JavaScript, `Array.prototype.indexOf`, `includes`, `find` and `findIndex` are linear searches. They're fine for small arrays or a one-off lookup. If you'll search the same large array many times, a `Set` or `Map` (O(1) lookup on average), or a sorted array with [binary search](/en/search/binary-search/), usually pays off.
 
 ## Test your memory
 
-Answer without scrolling back up.
+Try these without scrolling back up.
 
 <Quiz
 	question="An array has 1,000 elements and the target is not in it. How many comparisons does linear search make?"
@@ -58,4 +58,4 @@ Answer without scrolling back up.
 	explanation="Binary search only works on sorted arrays. Sorting costs O(n log n), more than a single O(n) linear search."
 />
 
-Ready to practice? Start with [the pirate's treasure](/en/search/linear-search-exercises/pirate-treasure/).
+Want to practice? Start with [the pirate's treasure](/en/search/linear-search-exercises/pirate-treasure/).

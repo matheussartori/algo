@@ -38,6 +38,25 @@ export default defineConfig({
 			routeMiddleware: './src/routeData.ts',
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/matheussartori/algo' }],
 			customCss: ['./src/styles/custom.css'],
+			components: { Footer: './src/components/starlight/Footer.astro' },
+			// code blocks share the player's card: same hairline, radius and paper
+			expressiveCode: {
+				styleOverrides: {
+					borderRadius: '14px',
+					borderColor: 'var(--color-rule)',
+					codeFontFamily: 'var(--font-mono)',
+					uiFontFamily: 'var(--font-display)',
+					codeBackground: 'var(--color-paper-2)',
+					frames: {
+						editorTabBarBackground: 'var(--color-paper-2)',
+						editorActiveTabBackground: 'var(--color-paper-3)',
+						editorActiveTabIndicatorTopColor: 'var(--color-accent)',
+						editorTabBarBorderBottomColor: 'var(--color-rule)',
+						terminalTitlebarBackground: 'var(--color-paper-2)',
+						frameBoxShadowCssValue: 'none',
+					},
+				},
+			},
 			sidebar: [
 				{
 					label: 'Começando',

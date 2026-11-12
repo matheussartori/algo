@@ -4,8 +4,6 @@ export interface LandingCopy {
 	title: string;
 	description: string;
 	prefix: string;
-	switchLabel: string;
-	switchHref: string;
 	nav: { path: string; method: string; start: string };
 	hero: { head: [string, string]; lede: string; primary: string; secondary: string };
 	chapter: { head: string; remaining: string; steps: string[] };
@@ -18,124 +16,107 @@ export interface LandingCopy {
 		rows: { href: string; title: string; cost: string; detail: string }[];
 		open: string;
 	};
-	footer: { line: string; source: string; terms: string; license: string };
 }
 
 export const copy: Record<Locale, LandingCopy> = {
 	'pt-BR': {
 		title: 'algo: algoritmos, passo a passo',
-		description: 'Veja o algoritmo rodar, preveja o próximo passo e escreva o seu, em TypeScript ou JavaScript, no navegador.',
+		description: 'Aprenda algoritmos vendo o código rodar linha por linha, chutando o próximo passo e resolvendo exercícios no navegador, em TypeScript ou JavaScript.',
 		prefix: '',
-		switchLabel: 'English',
-		switchHref: '/en/',
-		nav: { path: 'Trilha', method: 'Método', start: 'Começar' },
+		nav: { path: 'Lições', method: 'Como funciona', start: 'Começar' },
 		hero: {
 			head: ['Algoritmos,', 'passo a passo.'],
-			lede: 'Veja rodar, preveja o próximo passo, escreva o seu.',
+			lede: 'Você vê o código rodando, tenta adivinhar o que ele faz em seguida e depois escreve o seu. Tudo aqui mesmo, no navegador.',
 			primary: 'Começar pela busca linear',
 			secondary: 'Como estudar aqui',
 		},
 		chapter: {
-			head: '64 colunas ordenadas. No máximo 7 olhadas.',
-			remaining: 'ainda possíveis',
+			head: '64 números em ordem. Qualquer um sai em 7 tentativas.',
+			remaining: 'ainda no páreo',
 			steps: [
-				'Olhe a coluna do meio.',
-				'Menor que o alvo? Descarte a metade esquerda.',
-				'Maior? Descarte a metade direita.',
-				'Repita até achar, ou até não sobrar nada.',
+				'Olha o do meio.',
+				'Menor que o alvo? Esquece a metade da esquerda.',
+				'Maior? Esquece a da direita.',
+				'Repete até achar, ou até não sobrar nada.',
 			],
 		},
 		try: {
-			head: 'Sua vez.',
-			lede: 'Clique na coluna que a busca vai examinar a seguir.',
+			head: 'Tenta aí.',
+			lede: 'Clica na coluna que a busca vai olhar agora. Se errar, tudo bem: é errando que a regra gruda.',
 		},
 		method: {
-			head: 'Assistir ensina pouco. Prever ensina muito.',
-			lede: 'Cada tópico segue o mesmo ciclo, tirado de pesquisa sobre como se aprende.',
+			head: 'Só assistir não basta.',
+			lede: 'Vídeo de algoritmo parece claríssimo até você fechar a aba e tentar escrever. Por isso toda lição aqui segue o mesmo roteiro.',
 			steps: [
-				{ title: 'Intuição', body: 'Um problema real e a ideia por trás da solução.' },
-				{ title: 'Visualização', body: 'O código roda linha a linha, com as variáveis à mostra.' },
-				{ title: 'Previsão', body: 'Você escolhe o próximo passo antes de vê-lo.' },
-				{ title: 'Prática', body: 'Exercícios com testes ocultos, em TypeScript ou JavaScript.' },
-				{ title: 'Revisão', body: 'Perguntas para responder de memória, sem reler.' },
+				{ title: 'Intuição', body: 'Começa por um problema de verdade e pela ideia que resolve ele.' },
+				{ title: 'Visualização', body: 'O código roda linha por linha e você vê cada variável mudando.' },
+				{ title: 'Previsão', body: 'Antes de cada passo, você chuta o que vem. Errar aqui não custa nada.' },
+				{ title: 'Prática', body: 'Cinco exercícios por tópico, com uns testes escondidos. TypeScript ou JavaScript, você que sabe.' },
+				{ title: 'Revisão', body: 'No fim, umas perguntas pra responder de cabeça, sem voltar a página.' },
 			],
 		},
 		invariant: {
 			statement: 'Se o alvo existe, ele está entre low e high.',
-			caption: 'O invariante da busca binária: verdadeiro antes, durante e depois de cada passo.',
+			caption: 'É a regra que a busca binária nunca quebra. Pegou essa, pegou o algoritmo.',
 		},
 		path: {
-			head: 'A trilha, por enquanto.',
-			lede: 'Dois tópicos completos, cada um com cinco exercícios.',
+			head: 'O que já tem aqui',
+			lede: 'Por enquanto são dois tópicos, com cinco exercícios cada. Vem mais.',
 			rows: [
-				{ href: '/search/linear-search/', title: 'Busca linear', cost: 'O(n)', detail: 'Um elemento de cada vez, em qualquer array.' },
-				{ href: '/search/binary-search/', title: 'Busca binária', cost: 'O(log n)', detail: 'Metade descartada a cada passo, num array ordenado.' },
+				{ href: '/search/linear-search/', title: 'Busca linear', cost: 'O(n)', detail: 'Olha um por um. Serve pra qualquer array, até bagunçado.' },
+				{ href: '/search/binary-search/', title: 'Busca binária', cost: 'O(log n)', detail: 'Corta o problema pela metade a cada passo. Só que o array precisa estar em ordem.' },
 			],
 			open: 'Abrir',
-		},
-		footer: {
-			line: 'Seu código roda no navegador, num Web Worker. Nada vai para um servidor.',
-			source: 'Código-fonte',
-			terms: 'Termos de uso',
-			license: 'Licença',
 		},
 	},
 	en: {
 		title: 'algo: algorithms, step by step',
-		description: 'Watch the algorithm run, predict the next step and write your own, in TypeScript or JavaScript, in the browser.',
+		description: 'Learn algorithms by watching the code run line by line, guessing the next step and solving exercises right in the browser, in TypeScript or JavaScript.',
 		prefix: '/en',
-		switchLabel: 'Português',
-		switchHref: '/',
-		nav: { path: 'Path', method: 'Method', start: 'Start' },
+		nav: { path: 'Lessons', method: 'How it works', start: 'Start' },
 		hero: {
 			head: ['Algorithms,', 'step by step.'],
-			lede: 'Watch it run, predict the next step, write your own.',
+			lede: "You watch the code run, take a guess at what it does next, then write your own. All of it right here in the browser.",
 			primary: 'Start with linear search',
 			secondary: 'How to study here',
 		},
 		chapter: {
-			head: '64 sorted columns. At most 7 looks.',
-			remaining: 'still possible',
+			head: '64 sorted numbers. Any one of them in 7 tries.',
+			remaining: 'still in play',
 			steps: [
-				'Look at the middle column.',
-				'Smaller than the target? Drop the left half.',
-				'Larger? Drop the right half.',
-				'Repeat until found, or until nothing is left.',
+				'Look at the middle one.',
+				'Smaller than the target? Forget the left half.',
+				'Bigger? Forget the right half.',
+				'Keep going until you find it, or nothing is left.',
 			],
 		},
 		try: {
-			head: 'Your turn.',
-			lede: 'Click the column the search will examine next.',
+			head: 'Give it a go.',
+			lede: "Click the column the search checks next. Getting it wrong is fine, that's how the rule sinks in.",
 		},
 		method: {
-			head: 'Watching teaches little. Predicting teaches a lot.',
-			lede: 'Every topic runs the same loop, taken from research on how people learn.',
+			head: "Watching isn't enough.",
+			lede: 'An algorithm video feels crystal clear until you close the tab and try to write it. So every lesson here follows the same routine.',
 			steps: [
-				{ title: 'Intuition', body: 'A real problem and the idea behind the solution.' },
-				{ title: 'Visualization', body: 'The code runs line by line, variables in view.' },
-				{ title: 'Prediction', body: 'You pick the next step before you see it.' },
-				{ title: 'Practice', body: 'Exercises with hidden tests, in TypeScript or JavaScript.' },
-				{ title: 'Review', body: 'Questions to answer from memory, without re-reading.' },
+				{ title: 'Intuition', body: 'It starts with a real problem and the idea that cracks it.' },
+				{ title: 'Visualization', body: 'The code runs line by line and you watch every variable change.' },
+				{ title: 'Prediction', body: 'Before each step, you guess what comes next. Being wrong here is free.' },
+				{ title: 'Practice', body: 'Five exercises per topic, some tests hidden. TypeScript or JavaScript, your call.' },
+				{ title: 'Review', body: 'A few questions at the end to answer from memory, no scrolling back.' },
 			],
 		},
 		invariant: {
 			statement: 'If the target exists, it is between low and high.',
-			caption: 'The binary search invariant: true before, during and after every step.',
+			caption: "The one rule binary search never breaks. Get this and you've got the algorithm.",
 		},
 		path: {
-			head: 'The path, so far.',
-			lede: 'Two complete topics, five exercises each.',
+			head: "What's here so far",
+			lede: 'Two topics for now, five exercises each. More on the way.',
 			rows: [
-				{ href: '/en/search/linear-search/', title: 'Linear search', cost: 'O(n)', detail: 'One element at a time, in any array.' },
-				{ href: '/en/search/binary-search/', title: 'Binary search', cost: 'O(log n)', detail: 'Half dropped at every step, in a sorted array.' },
+				{ href: '/en/search/linear-search/', title: 'Linear search', cost: 'O(n)', detail: 'Check them one by one. Works on any array, even a messy one.' },
+				{ href: '/en/search/binary-search/', title: 'Binary search', cost: 'O(log n)', detail: 'Cuts the problem in half every step. The catch: the array has to be sorted.' },
 			],
 			open: 'Open',
-		},
-		footer: {
-			line: 'Your code runs in the browser, in a Web Worker. Nothing goes to a server.',
-			source: 'Source code',
-			terms: 'Terms of use',
-			license: 'License',
 		},
 	},
 };

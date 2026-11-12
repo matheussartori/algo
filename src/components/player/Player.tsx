@@ -132,7 +132,7 @@ export default function Player({ algo, input, lang, codeHtml, predict = false, c
 				{question && (
 					<div className="algo-player__prompt">
 						<span>{t(lang, 'player.predictPrompt')}</span>
-						<button type="button" className="algo-button algo-button--ghost" onClick={() => answer('none')}>
+						<button type="button" className="algo-button algo-button--ghost algo-button--small" onClick={() => answer('none')}>
 							{t(lang, 'player.predictNone')}
 						</button>
 					</div>

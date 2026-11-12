@@ -1,0 +1,10 @@
+---
+import Default from '@astrojs/starlight/components/Footer.astro';
+import { toLocale } from '../../lib/i18n';
+import SiteFooter from '../site/SiteFooter.astro';
+
+const lang = toLocale(Astro.locals.starlightRoute.lang);
+---
+
+<Default />
+<SiteFooter lang={lang} inline />

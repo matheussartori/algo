@@ -5,6 +5,9 @@ import { iconLinks } from '../../lib/head.mjs';
 import markDark from '../../assets/brand/mark-dark.svg';
 import type { Locale } from '../../lib/i18n';
 import AlgoPlayer from '../AlgoPlayer.astro';
+import GitHubIcon from '../site/GitHubIcon.astro';
+import SiteFooter from '../site/SiteFooter.astro';
+import { REPO } from '../site/chrome';
 import { copy } from './copy';
 import '../../styles/landing.css';
 
@@ -39,6 +42,11 @@ const jsonLd = {
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!-- The home has no language switcher: it follows the system language (Portuguese or, for anything else, English). -->
+		<script is:inline define:vars={{ lang }}>
+			const wants = /^pt\b/i.test(navigator.language || '') ? 'pt-BR' : 'en';
+			if (wants !== lang) location.replace((wants === 'en' ? '/en/' : '/') + location.search + location.hash);
+		</script>
 		<title>{c.title}</title>
 		<meta name="description" content={c.description} />
 		<link rel="canonical" href={canonical} />
@@ -68,15 +76,16 @@ const jsonLd = {
 		<header class="nav">
 			<div class="nav__inner container">
 				<a class="wordmark" href={`${p}/`} aria-label="algo">
-					<Image src={markDark} alt="" width={28} height={28} />
+					<Image src={markDark} alt="" width={22} height={22} />
 					<span>algo</span>
 				</a>
-				<nav class="nav__links" aria-label={c.nav.path}>
-					<a href="#trilha">{c.nav.path}</a>
-					<a href="#metodo">{c.nav.method}</a>
-					<a href={c.switchHref} hreflang={lang === 'en' ? 'pt-BR' : 'en'}>{c.switchLabel}</a>
+				<nav class="nav__links" aria-label="algo">
+					<a class="site-link" href="#trilha">{c.nav.path}</a>
+					<a class="site-link" href="#metodo">{c.nav.method}</a>
+					<a class="nav__github" href={REPO} aria-label="GitHub"><GitHubIcon /></a>
+					<span class="nav__divider" aria-hidden="true"></span>
 				</nav>
-				<a class="algo-button nav__action" href={`${p}/getting-started/`}>{c.nav.start}</a>
+				<a class="algo-button algo-button--small nav__action" href={`${p}/getting-started/`}>{c.nav.start}</a>
 			</div>
 		</header>
 
@@ -183,24 +192,11 @@ const jsonLd = {
 			</section>
 		</main>
 
-		<footer class="footer">
-			<div class="footer__inner container">
-				<a class="wordmark wordmark--large" href={`${p}/`} aria-label="algo">
-					<Image src={markDark} alt="" width={56} height={56} />
-					<span>algo</span>
-				</a>
-				<p class="footer__line">{c.footer.line}</p>
+		<div class="footer">
+			<SiteFooter lang={lang}>
 				<div class="stage-anchor stage-anchor--footer" data-stage="footer" aria-hidden="true"></div>
-				<nav class="footer__links" aria-label="algo">
-					{c.path.rows.map((row) => <a href={row.href}>{row.title}</a>)}
-					<a href={`${p}/getting-started/`}>{c.hero.secondary}</a>
-					<a href="https://github.com/matheussartori/algo">{c.footer.source}</a>
-					<a href={`${p}/terms/`}>{c.footer.terms}</a>
-					<a href="https://github.com/matheussartori/algo/blob/main/LICENSE">{c.footer.license}</a>
-					<a href={c.switchHref}>{c.switchLabel}</a>
-				</nav>
-			</div>
-		</footer>
+			</SiteFooter>
+		</div>
 
 		<script>
 			import { startLanding } from './field';

@@ -45,10 +45,10 @@
   --tok-keyword: oklch(74% 0.16 33); --tok-string: oklch(82% 0.12 166); --tok-number: oklch(84% 0.1 85);
   --tok-comment: var(--color-muted); --tok-type: oklch(84% 0.08 230); --tok-fn: var(--color-ink);
 
-  --font-display: "Tektur", "Switzer", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Tektur", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   /* the machine's own figures and the wordmark: a dot-matrix, lit like an LED panel */
   --font-figure: "Array", "Tektur", ui-monospace, monospace;
-  --font-body: "Switzer", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
   --font-outlier: var(--font-mono);
 

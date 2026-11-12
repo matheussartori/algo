@@ -10,46 +10,46 @@ import Quiz from '~/components/Quiz.astro';
 
 ## A ideia
 
-Pense num jogo: eu escolho um número de 1 a 100 e você tenta adivinhar. A cada chute eu digo "é maior" ou "é menor". Começar pelo 1 e subir de um em um funciona, mas pode levar 100 chutes. Chutar **50** elimina metade das opções de uma vez. Depois 25 ou 75, e assim por diante. Em no máximo **7 chutes** você acerta.
+Imagina um jogo: eu escolho um número de 1 a 100 e você tenta adivinhar. A cada chute eu digo "é maior" ou "é menor". Começar pelo 1 e subir de um em um funciona, mas pode levar 100 chutes. Chutando **50**, você já elimina metade das opções de uma vez. Depois 25 ou 75, e por aí vai. No máximo em **7 chutes** você acerta.
 
-A **busca binária** faz exatamente isso num array **ordenado**. Ela mantém um intervalo `[low, high]` onde o alvo ainda pode estar e, a cada passo, olha o elemento do meio:
+A **busca binária** faz isso num array **ordenado**. Ela guarda um intervalo `[low, high]` onde o alvo ainda pode estar e, a cada passo, olha o elemento do meio:
 
 - Se for o alvo, acabou.
 - Se for **menor** que o alvo, o alvo só pode estar à direita: `low = mid + 1`.
 - Se for **maior**, só pode estar à esquerda: `high = mid - 1`.
 
 :::caution[Só funciona com o array ordenado]
-É a ordenação que permite descartar uma metade inteira com uma única comparação.
+Sem ordenação não dá pra descartar uma metade inteira com uma comparação só.
 :::
 
 ## Veja rodando
 
-Observe os ponteiros `low`, `mid` e `high` e como os elementos descartados vão apagando.
+Repara nos ponteiros `low`, `mid` e `high` e em como os elementos descartados vão apagando.
 
 <AlgoPlayer algo="binary-search" input={{ array: [2, 5, 8, 12, 16, 23, 38, 56, 72, 91], target: 23 }} />
 
 ## Agora você prevê
 
-Antes de cada passo, clique no índice do **meio** que a busca vai examinar. Dica: `mid = Math.floor((low + high) / 2)`. Este alvo não existe; quando o intervalo ficar vazio, escolha *Nenhum*.
+Antes de cada passo, clica no índice do **meio** que a busca vai olhar. Dica: `mid = Math.floor((low + high) / 2)`. Esse alvo não existe, então quando o intervalo ficar vazio escolhe *Nenhum*.
 
 <AlgoPlayer algo="binary-search" input={{ array: [3, 9, 14, 20, 27, 31, 40, 48, 55, 61, 70, 84], target: 50 }} predict />
 
 ## O invariante
 
-O segredo para escrever uma busca binária sem erro é saber o que **nunca muda** durante o loop:
+Pra escrever uma busca binária sem erro, o segredo é saber o que **nunca muda** durante o loop:
 
 > Se o alvo está no array, ele está entre `low` e `high` (inclusive).
 
-Toda atualização preserva isso. `low = mid + 1` só acontece quando `array[mid] < target`, então nada à esquerda de `mid + 1` pode ser o alvo. Quando `low > high`, o intervalo está vazio e o invariante garante que o alvo não existe.
+Toda atualização mantém isso. O `low = mid + 1` só acontece quando `array[mid] < target`, então nada à esquerda de `mid + 1` pode ser o alvo. Quando `low > high`, o intervalo está vazio e o invariante garante que o alvo não existe.
 
-Os erros mais comuns quebram justamente esse invariante:
+Os erros mais comuns quebram esse invariante:
 
-- `while (low < high)` em vez de `<=`: deixa de examinar o último elemento que sobrou.
-- `low = mid` em vez de `mid + 1`: o intervalo pode parar de diminuir e virar um loop infinito.
+- `while (low < high)` em vez de `<=` deixa o último elemento que sobrou sem ser olhado.
+- `low = mid` em vez de `mid + 1` pode fazer o intervalo parar de diminuir e virar loop infinito.
 
 ## Custo
 
-Cada passo corta o intervalo pela metade. Começando com n elementos, depois de k passos sobram n / 2^k. Isso chega a 1 quando k = log₂ n.
+Cada passo corta o intervalo pela metade. Com n elementos, depois de k passos sobram n / 2^k, que chega a 1 quando k = log₂ n.
 
 | n | Busca linear (pior caso) | Busca binária (pior caso) |
 | --- | --- | --- |
@@ -57,14 +57,14 @@ Cada passo corta o intervalo pela metade. Começando com n elementos, depois de 
 | 1.000.000 | 1.000.000 | 20 |
 | 1.000.000.000 | 1.000.000.000 | 30 |
 
-Tempo **O(log n)**, memória extra **O(1)**.
+O tempo é **O(log n)** e a memória extra é **O(1)**.
 
 ## Onde ela aparece
 
-- **`git bisect`** acha o commit que introduziu um bug fazendo busca binária no histórico.
-- Índices de banco de dados (árvores B) aplicam a mesma ideia para achar uma linha entre milhões.
-- `_.sortedIndex` do Lodash e `bisect` do Python encontram onde inserir um valor mantendo a ordem.
-- Fora de arrays: "qual o menor tamanho de lote que não estoura a memória?" também se resolve dividindo o intervalo de respostas ao meio.
+- **`git bisect`** acha o commit que introduziu um bug com uma busca binária no histórico.
+- Índices de banco de dados (árvores B) usam a mesma ideia pra achar uma linha entre milhões.
+- `_.sortedIndex` do Lodash e `bisect` do Python descobrem onde inserir um valor sem bagunçar a ordem.
+- Dá pra usar fora de arrays também. "Qual o menor tamanho de lote que não estoura a memória?" se resolve dividindo o intervalo de respostas ao meio.
 
 ## Teste sua memória
 
@@ -72,7 +72,7 @@ Tempo **O(log n)**, memória extra **O(1)**.
 	question="Quantas comparações, no máximo, a busca binária faz num array ordenado com 1.000 elementos?"
 	options={['10', '100', '500', '1.000']}
 	answer={0}
-	explanation="2¹⁰ = 1.024, então 10 metades bastam para chegar a um único elemento."
+	explanation="2¹⁰ = 1.024, então 10 divisões ao meio bastam pra chegar a um único elemento."
 />
 
 <Quiz
@@ -89,4 +89,4 @@ Tempo **O(log n)**, memória extra **O(1)**.
 	explanation="Com `low = mid`, quando `low` e `high` são vizinhos, `mid` vale `low` e o intervalo nunca diminui. (`Math.trunc` dá o mesmo resultado aqui porque os índices não são negativos.)"
 />
 
-Pronto para praticar? Comece pelo [livro da biblioteca](/search/binary-search-exercises/library-book/).
+Bora praticar? Começa pelo [livro da biblioteca](/search/binary-search-exercises/library-book/).
